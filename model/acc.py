@@ -14,9 +14,18 @@ class Account:
 
     def get_name(self):
         return self.name
+    
+    def set_name(self, name: str):
+        self.name = name
 
     def get_password(self):
         return self.password
+    
+    def set_password(self, password: str):
+        self.password = password
 
     def get_role(self):
         return self.role
+    
+    def set_role(self, role: Role):
+        self.role = role
