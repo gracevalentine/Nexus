@@ -17,7 +17,8 @@ def load_account(account_id):
     data = r.get(key)
     if data:
         data = json.loads(data)
-        from account import Account, AccountStatus
+        from model.Account import Account
+        from model.AccountStatus import AccountStatus
         acc = Account(data["name"], data["password"], account_id)
         acc.status = AccountStatus[data["status"]]
         return acc

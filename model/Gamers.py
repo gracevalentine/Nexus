@@ -1,8 +1,9 @@
-from model import Acc
+from model import Account
 
-class Gamers(Acc):
-    def __init__(self, wallet, name, password, id):
-        super().__init__(name, password, id)
+class Gamers(Account):
+    def __init__(self, name, password, id):
+        super().__init__(name, password, id, role=Account.Role.GAMER)
+        self.wallet = 0.0
         self.games = []
         self.dlcs = []
 
@@ -23,3 +24,22 @@ class Gamers(Acc):
 
     def set_dlcs(self, dlcs):
         self.dlcs = dlcs
+        
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "password": self.password,
+            "role": "GAMER",
+            "wallet": self.wallet,
+            "games": self.games,
+            "dlcs": self.dlcs
+        }
+
+    @staticmethod
+    def from_dict(data):
+        gamer = Gamers(data["name"], data["password"], data["id"])
+        gamer.set_wallet(data.get("wallet", 0.0))
+        gamer.set_games(data.get("games", []))
+        gamer.set_dlcs(data.get("dlcs", []))
+        return gamer

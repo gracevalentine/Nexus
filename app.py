@@ -1,5 +1,5 @@
 from flask import Flask
-from controller.user_controller import UserController
+from controller.account_controller import UserController
 
 app = Flask(__name__, template_folder="view")
 

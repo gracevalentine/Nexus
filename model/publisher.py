@@ -1,6 +1,6 @@
-from model import Acc  
+from model import Account
 
-class Publisher(Acc):
+class Publisher(Account):
     def __init__(self, name, password, id):
         super().__init__(name, password, id)
         self.published_games = []
