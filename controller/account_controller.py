@@ -1,77 +1,44 @@
+from model.AccountStatus import AccountStatus
+from model.Gamers import Gamers
+from model.Admin import Admin
+from model.Publisher import Publisher
+from controller.db_controller import r
 import json
-from db_controller import r
-from model.Gamers import Gamers as gamers
-from model.Account import Account, Role
-from model.Publisher import Publisher as publisher
 
-def insert_new_account(account: Account, role: Role):
-    key = f"account:{account.id}"
-    if r.exists(key):
-        return False  # Account sudah ada
 
-    if account.role == Role.GAMER:
-        data = {
-            "id": account.id,
-            "name": account.name,
-            "password": account.password,
-            "role": role.GAMER,
-            "wallet": gamers.get_wallet(account),
-            "games": gamers.get_games(account),
-            "dlcs": gamers.get_dlcs(account)
-        }
-    elif account.role == Role.ADMIN:
-        data = {
-            "id": account.id,
-            "name": account.name,
-            "password": account.password,
-            "role": role.ADMIN
-        }
-    elif account.role == Role.PUBLISHER:
-        data = {
-            "id": account.id,
-            "name": account.name,
-            "password": account.password,
-            "role": role.PUBLISHER,
-            "published_games": publisher.get_published_games(account),
-            "published_dlcs": publisher.get_published_dlcs(account)
-        }
-    else:
-        return False  # Role tidak valid
-
-    r.set(key, json.dumps(data))
-    return True
-
-def get_account_by_name_and_password(name, password):
+def get_account(username: str, password: str):
+    # Cek semua key dengan prefix 'account:'
     for key in r.scan_iter("account:*"):
-        data = json.loads(r.get(key))
-        if data["name"] == name and data["password"] == password:
-            role = data["role"]
+        data_json = r.get(key)
+        if not data_json:
+            continue
+        data = json.loads(data_json)
+
+        # Cocokkan username dan password
+        if data["name"] == username and data["password"] == password:
+            role = data.get("role", "GAMER")  # Default ke GAMER jika tidak ada
+            status = AccountStatus[data.get("status", "ACTIVE")]
+            account_id = int(key.split(":")[1])
+
+            # Pembentukan objek berdasarkan role
             if role == "GAMER":
-                acc = gamers(data["name"], data["password"], data["id"])
-                acc.set_wallet(data["wallet", 0.0])
-                acc.set_games(data.get("games", []))
-                acc.set_dlcs(data.get("dlcs", []))
-                return acc
-            else:
-                acc = Account(data["name"], data["password"], data["id"])
-                acc.set_role(Role[role])
-                return acc
+                gamer = Gamers(data["name"], data["password"], account_id)
+                gamer.set_status(status)
+                gamer.set_wallet(data.get("wallet", 0.0))
+                gamer.set_games(data.get("games", []))
+                gamer.set_dlcs(data.get("dlcs", []))
+                return gamer
+
+            elif role == "ADMIN":
+                admin = Admin(data["name"], data["password"], account_id)
+                admin.set_status(status)
+                return admin
+
+            elif role == "PUBLISHER":
+                publisher = Publisher(data["name"], data["password"], account_id)
+                publisher.set_status(status)
+                publisher.set_published_games(data.get("published_games", []))
+                publisher.set_published_dlcs(data.get("published_dlcs", []))
+                return publisher
+
     return None
-
-def update_wallet(account, top_up_amount):
-    if account != Role.GAMER:
-        return False  # Hanya gamer yang punya wallet
-
-    key = f"account:{account.id}"
-    data = r.get(key)
-    if not data:
-        return False
-
-    data = json.loads(data)
-    current_wallet = data.get("wallet", 0.0)
-    updated_wallet = current_wallet + top_up_amount
-    data["wallet"] = updated_wallet
-    r.set(key, json.dumps(data))
-
-    account.set_wallet(updated_wallet)
-    return True
