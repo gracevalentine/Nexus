@@ -6,7 +6,7 @@ class Role(Enum):
     PUBLISHER = 3
 
 class Account:
-    def __init__(self, name='', password='', id=0, role=Role.GAMER):
+    def __init__(self, name='', password='', id=0, role=Role.none):
         self.name = name
         self.password = password
         self.id = id

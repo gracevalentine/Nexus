@@ -1,11 +1,14 @@
-class item:
-    def __init__(self, itemID: int,name: str, type: str, desc: str, publisherID: int, price: float):
+from model import ItemStatus
+
+class Item:
+    def __init__(self, itemID, name, item_type, desc, publisherID, price, status=ItemStatus.NONE):
         self.itemID = itemID
         self.name = name
-        self.type = type
+        self.item_type = item_type
         self.desc = desc
         self.publisherID = publisherID
         self.price = price
+        self.status = status
         
     def get_itemID(self):
         return self.itemID
@@ -20,10 +23,10 @@ class item:
         self.name = name    
         
     def get_type(self):
-        return self.type    
+        return self.item_type    
     
-    def set_type(self, type: str):
-        self.type = type
+    def set_type(self, item_type: str):
+        self.item_type = item_type
         
     def get_desc(self):
         return self.desc
@@ -42,5 +45,11 @@ class item:
     
     def set_price(self, price: float):
         self.price = price
+    
+    def get_status(self):
+        return self.status
+    
+    def set_status(self, status: ItemStatus):
+        self.status = status    
     
     
