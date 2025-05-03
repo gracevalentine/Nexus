@@ -2,14 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for
 from controller import account_controller
 from model.AccountStatus import AccountStatus
 
-app = Flask(__name__, template_folder='view')  # arahkan ke folder view/
+app = Flask(__name__, template_folder='view')
+
+@app.route('/')
+def home():
+    return render_template('home_page.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
 
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form['email']
         password = request.form['password']
 
         account = account_controller.get_account(username, password)
