@@ -1,4 +1,6 @@
 from enum import Enum
+from model.AccountStatus import AccountStatus
+
 
 class Role(Enum):
     GAMER = 1
@@ -6,11 +8,12 @@ class Role(Enum):
     PUBLISHER = 3
 
 class Account:
-    def __init__(self, name='', password='', id=0, role=Role.none):
+    def __init__(self, name='', password='', id=0, role=Role.GAMER, status=AccountStatus.ACTIVE):
         self.name = name
         self.password = password
         self.id = id
         self.role = role
+        self.status = status
 
     def get_name(self):
         return self.name
@@ -29,3 +32,9 @@ class Account:
     
     def set_role(self, role: Role):
         self.role = role
+        
+    def get_status(self):
+        return self.status
+    
+    def set_status(self, status: AccountStatus):
+        self.status = status
