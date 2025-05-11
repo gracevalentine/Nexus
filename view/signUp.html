@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign-Up | Nexus</title>
+    <link rel="stylesheet" href="css/signup.css" />
+</head>
+
+<body>
+    <div class="navbar">
+        <h1>ooo</h1>
+    </div>
+
+    <div class="container">
+        <h1>Sign-Up Page</h1>
+        <p>Please <a href="login.html">login</a> if you have an account.</p>
+        <form id="signup-form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" />
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" />
+
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" />
+
+            <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('signup-form');
+        form.addEventListener('submit', function (event) {
+            const name = form.name.value.trim();
+            const email = form.email.value.trim();
+            const password = form.password.value.trim();
+            const confirmPassword = form["confirm-password"].value.trim();
+
+            if (!name || !email || !password || !confirmPassword) {
+                event.preventDefault();
+                alert("All fields must be filled!");
+            } else if (password !== confirmPassword) {
+                event.preventDefault();
+                alert("Passwords do not match!");
+            }
+        });
+    </script>
+</body>
+
+</html>
