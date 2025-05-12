@@ -1,10 +1,13 @@
-from model import Item
+from model.Item import Item
 
-class review:
-    def __init__(self, review_id, review_text, item = Item.none):
+class Review:
+    def __init__(self, review_id: int, review_text: str, item: Item = None, reviewer=None):
+        if item is not None and not isinstance(item, Item):
+            raise TypeError("item must be an instance of Item")
         self.review_id = review_id
         self.review_text = review_text
         self.item = item
+        self.reviewer = reviewer
 
     def get_review_id(self):
         return self.review_id
@@ -23,3 +26,9 @@ class review:
     
     def set_item(self, item: Item):
         self.item = item
+    
+    def get_reviewer(self):
+        return self.reviewer
+    
+    def set_reviewer(self, reviewer):
+        self.reviewer = reviewer

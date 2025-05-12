@@ -1,16 +1,12 @@
-from enum import Enum
 from model.AccountStatus import AccountStatus
-
-
-class Role(Enum):
-    GAMER = 1
-    ADMIN = 2
-    PUBLISHER = 3
+from model.Role import Role  # asumsi Role.py disimpan di model juga
 
 class Account:
-    def __init__(self, name='', email='', password='', id=0, role=Role.GAMER, status=AccountStatus.ACTIVE):
+    def __init__(self, name='', password='', id=0, role: Role = None, status=AccountStatus.ACTIVE):
+        if not isinstance(role, Role):
+            raise TypeError("role must be an instance of Role enum.")
+        
         self.name = name
-        self.email = email
         self.password = password
         self.id = id
         self.role = role
@@ -21,13 +17,7 @@ class Account:
     
     def set_name(self, name: str):
         self.name = name
-        
-    def get_email(self):
-        return self.email
-    
-    def set_email(self, email: str):
-        self.email = email
-        
+
     def get_password(self):
         return self.password
     
@@ -38,6 +28,8 @@ class Account:
         return self.role
     
     def set_role(self, role: Role):
+        if not isinstance(role, Role):
+            raise TypeError("role must be an instance of Role enum.")
         self.role = role
         
     def get_status(self):
