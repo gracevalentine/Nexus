@@ -8,8 +8,9 @@ class Role(Enum):
     PUBLISHER = 3
 
 class Account:
-    def __init__(self, name='', password='', id=0, role=Role.GAMER, status=AccountStatus.ACTIVE):
+    def __init__(self, name='', email='', password='', id=0, role=Role.GAMER, status=AccountStatus.ACTIVE):
         self.name = name
+        self.email = email
         self.password = password
         self.id = id
         self.role = role
@@ -20,7 +21,13 @@ class Account:
     
     def set_name(self, name: str):
         self.name = name
-
+        
+    def get_email(self):
+        return self.email
+    
+    def set_email(self, email: str):
+        self.email = email
+        
     def get_password(self):
         return self.password
     

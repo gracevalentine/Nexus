@@ -1,44 +1,100 @@
+from flask import request, redirect, url_for, render_template, session
+from model.Account import Account, Role
 from model.AccountStatus import AccountStatus
-from model.Gamers import Gamers
-from model.Admin import Admin
-from model.Publisher import Publisher
-from controller.db_controller import r
-import json
+from controller.db_controller import get_db_connection
+from werkzeug.security import generate_password_hash, check_password_hash
 
+def show_register():
+    if request.method == 'POST':
+        name = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm-password']
+        role = Role[request.form['role'].upper()]
+        status = AccountStatus.ACTIVE
 
-def get_account(username: str, password: str):
-    # Cek semua key dengan prefix 'account:'
-    for key in r.scan_iter("account:*"):
-        data_json = r.get(key)
-        if not data_json:
-            continue
-        data = json.loads(data_json)
+        if password != confirm_password:
+            return render_template('signUp.html', error='Passwords do not match')
 
-        # Cocokkan username dan password
-        if data["name"] == username and data["password"] == password:
-            role = data.get("role", "GAMER")  # Default ke GAMER jika tidak ada
-            status = AccountStatus[data.get("status", "ACTIVE")]
-            account_id = int(key.split(":")[1])
+        # Hash the password using bcrypt (instead of MD5)
+        hashed_pw = generate_password_hash(password)  # bcrypt hashing
 
-            # Pembentukan objek berdasarkan role
-            if role == "GAMER":
-                gamer = Gamers(data["name"], data["password"], account_id)
-                gamer.set_status(status)
-                gamer.set_wallet(data.get("wallet", 0.0))
-                gamer.set_games(data.get("games", []))
-                gamer.set_dlcs(data.get("dlcs", []))
-                return gamer
+        try:
+            db = get_db_connection()
+            cursor = db.cursor()
+            cursor.execute("""
+                INSERT INTO accounts (name, email, password, role, status)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (name, email, hashed_pw, role.name, status.name))
+            db.commit()
+            db.close()
+            
+            # If successful, redirect to login page
+            return redirect(url_for('login_route'))
+        except Exception as e:
+            db.rollback()  # In case of error, rollback the transaction
+            return render_template('signUp.html', error=f"Error: {str(e)}")
+    
+    return render_template('signUp.html')
 
-            elif role == "ADMIN":
-                admin = Admin(data["name"], data["password"], account_id)
-                admin.set_status(status)
-                return admin
+def show_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
 
-            elif role == "PUBLISHER":
-                publisher = Publisher(data["name"], data["password"], account_id)
-                publisher.set_status(status)
-                publisher.set_published_games(data.get("published_games", []))
-                publisher.set_published_dlcs(data.get("published_dlcs", []))
-                return publisher
+        db = get_db_connection()
+        cursor = db.cursor()
+        cursor.execute("SELECT id, name, password, role, status FROM accounts WHERE email=%s", (email,))
+        data = cursor.fetchone()
+        db.close()
 
-    return None
+        if data:
+            # Debugging: Print the hashed password from the DB
+            print("Stored hashed password:", data[2])
+            print("Password entered:", password)
+
+            # Verify password using bcrypt
+            if check_password_hash(data[2], password):  # Check against hashed password
+                account = Account(
+                    name=data[1],
+                    email=email,
+                    password=data[2],  # hashed password (nggak perlu disimpan kalau ga dipakai)
+                    id=data[0],
+                    role=Role[data[3]],
+                    status=AccountStatus[data[4]]
+                )
+
+                if account.status == AccountStatus.BANNED:
+                    return render_template('login.html', error='Akun anda telah diblokir')
+
+                session['account_id'] = account.id
+                session['username'] = account.name
+                session['role'] = account.role.name
+
+                # Redirect berdasar role
+                if account.role == Role.GAMER:
+                    return redirect(url_for('gamer_dashboard', user_id=account.id))
+                elif account.role == Role.ADMIN:
+                    return redirect(url_for('admin_dashboard', admin_id=account.id))
+                elif account.role == Role.PUBLISHER:
+                    return redirect(url_for('publisher_dashboard', publisher_id=account.id))
+            else:
+                return render_template('login.html', error='Email atau password salah')
+
+        else:
+            return render_template('login.html', error='Email tidak ditemukan')
+
+    return render_template('login.html')
+
+def home():
+    if 'account_id' not in session:
+        return redirect(url_for('login_route'))
+    
+    return render_template('home.html', username=session.get('username'), role=session.get('role'))
+
+def dashboard_route():
+    return f"Welcome {session.get('username')} as {session.get('role')}"
+
+def logout():
+    session.clear()
+    return redirect(url_for('login_route'))

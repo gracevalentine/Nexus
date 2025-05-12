@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('your-background.jpg') no-repeat center center fixed;
+    background: url('asset/webp/the-last-of-us-listing-thumb-01-ps3-us-20nov14.png') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     flex-direction: column;

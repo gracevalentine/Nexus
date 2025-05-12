@@ -1,38 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for
 from controller import account_controller
-from model.AccountStatus import AccountStatus
 
-app = Flask(__name__, template_folder='view')
+app = Flask(__name__, template_folder='view', static_folder='view')
+app.secret_key = 'some_random_secret_key'
 
 @app.route('/')
 def home():
-    return render_template('home_page.html')
+    return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
+def login_route():  # ⬅️ ganti jadi login_route biar sesuai dengan controller
+    return account_controller.show_login()
 
-    if request.method == 'POST':
-        username = request.form['email']
-        password = request.form['password']
+@app.route('/register', methods=['GET', 'POST'])
+def register_route():  # ⬅️ ini route baru untuk register
+    return account_controller.show_register()
 
-        account = account_controller.get_account(username, password)
-
-        if account and account.status == AccountStatus.ACTIVE:
-            if account.role.name == "GAMER":
-                return redirect(url_for('gamer_dashboard', user_id=account.id))
-            elif account.role.name == "ADMIN":
-                return redirect(url_for('admin_dashboard', admin_id=account.id))
-            elif account.role.name == "PUBLISHER":
-                return redirect(url_for('publisher_dashboard', publisher_id=account.id))
-        else:
-            error = "Invalid username or password"
-
-    return render_template('login.html', error=error)
+# @app.route('/gamer/<int:user_id>')
+# def gamer_dashboard(user_id):
+#     return f"Welcome Gamer #{user_id}!"
 
 @app.route('/gamer/<int:user_id>')
 def gamer_dashboard(user_id):
-    return f"Welcome Gamer #{user_id}!"
+    return render_template('home_page.html', user_id=user_id)
 
 @app.route('/admin/<int:admin_id>')
 def admin_dashboard(admin_id):

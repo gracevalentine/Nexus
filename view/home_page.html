@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus - Home</title>
-    <link rel="stylesheet" href="css/home_page.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_page.css') }}">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="{{ url_for('home') }}">&lt;logo_pic&gt;</a>
+            <a href="{{ url_for('static', filename='home_page.html') }}">&lt;logo_pic&gt;</a>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search">
             <button>🔍</button>
         </div>
         <nav>
-            <a href="home_page.html" class="active">HOME</a>
-            <a href="library.html">LIBRARY</a>
+            <a href="{{ url_for('static', filename='home_page.html') }}" class="active">HOME</a>
+            <a href="{{ url_for('static', filename='library.html') }}">LIBRARY</a>
             <a href="#">STORE</a>
             <a href="#">SETTINGS</a>
         </nav>
@@ -31,7 +31,7 @@
             <em>The long wait is over</em>
             <p>
                 Writing effectively is an art. Start by using simple, everyday words people can easily understand. Be
-                clear and direct to the point. Keep your thoughts flowing logically, and aim for brevity unless you’re
+                clear and direct to the point. Keep your thoughts flowing logically, and aim for brevity unless you're
                 writing in the long form.
                 <br><br>
                 Your ideas have a purpose so choose words that accurately express them. Ensure your grammar is flawless
