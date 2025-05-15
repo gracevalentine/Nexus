@@ -1,13 +1,12 @@
 from datetime import datetime
 
 class Transaction:
-    def __init__(self, transaction_id=0, gamer_id=0, date=None, shopping_cart=None):
+    def __init__(self, transaction_id=0, gamer_id=0, date=None):
         if date is None:
             date = datetime.now()  # Set default to current timestamp if not provided
         self.transaction_id = transaction_id
         self.gamer_id = gamer_id
         self.date = date
-        self.shopping_cart = shopping_cart
 
     def get_transaction_id(self):
         return self.transaction_id
@@ -27,8 +26,3 @@ class Transaction:
     def set_date(self, date: datetime):
         self.date = date
 
-    def get_shopping_cart(self):
-        return self.shopping_cart
-
-    def set_shopping_cart(self, shopping_cart):
-        self.shopping_cart = shopping_cart

@@ -8,7 +8,6 @@ from model.Gamer import Gamer
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# controller/admin.py
 from model.Gamer import Gamer
 from model.AccountStatus import AccountStatus
 from flask import redirect, url_for
