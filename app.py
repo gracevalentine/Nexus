@@ -36,11 +36,17 @@
 #     app.run(debug=True)
 
 # dari yang dea
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, send_from_directory
 from controller import account_controller
+import os
 
-app = Flask(__name__, template_folder='view')  # kalau folder view tetap dipakai
+app = Flask(__name__, template_folder='view', static_url_path='/css', static_folder='view/css')
 app.secret_key = 'secretkey123'
+
+# Tambahan: untuk layani CSS dari view/css
+@app.route('/css/<path:filename>')
+def custom_css(filename):
+    return send_from_directory(os.path.join('view', 'css'), filename)
 
 @app.route('/')
 def index():
@@ -56,5 +62,6 @@ def register_route():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 

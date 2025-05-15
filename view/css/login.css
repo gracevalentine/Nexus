@@ -100,6 +100,12 @@ body {
     transform: scale(1.05);
     box-shadow: 0 4px 15px rgba(102, 204, 255, 0.5);
 }
+.remember-me-container {
+  display: flex;
+  align-items: center; /* Ini yang bikin sejajar vertikal */
+  gap: 8px; /* Jarak antara checkbox dan teks */
+  margin-bottom: 16px; /* Optional, biar ada jarak sebelum tombol */
+}
 
 @keyframes fadeInDown {
     from {
