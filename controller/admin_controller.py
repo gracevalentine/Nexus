@@ -12,7 +12,6 @@ from model.Gamer import Gamer
 from model.AccountStatus import AccountStatus
 from flask import redirect, url_for
 
-
 @admin_bp.route('/ban/<int:gamer_id>')
 def ban_gamer(gamer_id):
     # Gunakan query ORM untuk ambil data gamer dari DB
