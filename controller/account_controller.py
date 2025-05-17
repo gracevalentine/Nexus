@@ -16,25 +16,38 @@ def show_register():
         if password != confirm_password:
             return render_template('signUp.html', error='Passwords do not match')
 
-        # Hash the password using bcrypt (instead of MD5)
-        hashed_pw = generate_password_hash(password)  # bcrypt hashing
+        hashed_pw = generate_password_hash(password)
 
         try:
             db = get_db_connection()
             cursor = db.cursor()
-            cursor.execute("""
-                INSERT INTO accounts (name, email, password, role, status)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (name, email, hashed_pw, role.name, status.name))
+
+            if role == Role.GAMER:
+                cursor.execute("""
+                    INSERT INTO gamer (gamer_name, gamer_email, gamer_password, gamer_role, gamer_status)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (name, email, hashed_pw, role.name, status.name))
+            elif role == Role.PUBLISHER:
+                cursor.execute("""
+                    INSERT INTO publisher (name, email, password, role, status)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (name, email, hashed_pw, role.name, status.name))
+            elif role == Role.ADMIN:
+                cursor.execute("""
+                    INSERT INTO admin (name, email, password, role, status)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (name, email, hashed_pw, role.name, status.name))
+            else:
+                return render_template('signUp.html', error='Invalid role selected')
+
             db.commit()
             db.close()
-            
-            # If successful, redirect to login page
             return redirect(url_for('login_route'))
+
         except Exception as e:
-            db.rollback()  # In case of error, rollback the transaction
+            db.rollback()
             return render_template('signUp.html', error=f"Error: {str(e)}")
-    
+
     return render_template('signUp.html')
 
 def show_login():
@@ -44,7 +57,7 @@ def show_login():
 
         db = get_db_connection()
         cursor = db.cursor()
-        cursor.execute("SELECT id, name, password, role, status FROM accounts WHERE email=%s", (email,))
+        cursor.execute("SELECT id, gamer_name, gamer_email, gamer_password, gamer_role, gamer_status FROM accounts WHERE email=%s", (email,))
         data = cursor.fetchone()
         db.close()
 

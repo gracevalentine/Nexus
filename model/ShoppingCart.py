@@ -1,23 +1,29 @@
 class ShoppingCart:
     def __init__(self, cart_id, game_id, description):
-        self.cart_id = cart_id
-        self.item_id = game_id
-        self.description = description
+        self._cart_id = cart_id
+        self._item_id = game_id
+        self._description = description
 
-    def get_cart_id(self):
-        return self.cart_id
-    
-    def set_cart_id(self, cart_id: int):
-        self.cart_id = cart_id
-        
-    def get_item_id(self):
-        return self.game_id
+    @property
+    def cart_id(self):
+        return self._cart_id
 
-    def set_item_id(self, game_id: int):
-        self.game_id = game_id
+    @cart_id.setter
+    def cart_id(self, value):
+        self._cart_id = value
 
-    def get_description(self):
-        return self.description
+    @property
+    def item_id(self):
+        return self._item_id
 
-    def set_description(self, description: str):
-        self.description = description
+    @item_id.setter
+    def item_id(self, value):
+        self._item_id = value
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value

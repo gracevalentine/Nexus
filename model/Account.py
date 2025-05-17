@@ -1,46 +1,63 @@
 from model.AccountStatus import AccountStatus
-from model.Role import Role  # asumsi Role.py disimpan di model juga
+from model.Role import Role
 
 class Account:
     def __init__(self, name='', email='', password='', id=0, role: Role = None, status=AccountStatus.NOT_BANNED):
         if not isinstance(role, Role):
             raise TypeError("role must be an instance of Role enum.")
-        
-        self.name = name
-        self.email = email 
-        self.password = password
-        self.id = id
-        self.role = role
-        self.status = status
+        self._name = name
+        self._email = email 
+        self._password = password
+        self._id = id
+        self._role = role
+        self._status = status
 
-    def get_name(self):
-        return self.name
-    
-    def set_name(self, name: str):
-        self.name = name
-        
-    def get_email(self):
-        return self.email
-    
-    def set_email(self, email: str):    
-        self.email = email
+    @property
+    def name(self):
+        return self._name
 
-    def get_password(self):
-        return self.password
-    
-    def set_password(self, password: str):
-        self.password = password
+    @name.setter
+    def name(self, value):
+        self._name = value
 
-    def get_role(self):
-        return self.role
-    
-    def set_role(self, role: Role):
-        if not isinstance(role, Role):
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, value):
+        self._email = value
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = value
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        self._id = value
+
+    @property
+    def role(self):
+        return self._role
+
+    @role.setter
+    def role(self, value: Role):
+        if not isinstance(value, Role):
             raise TypeError("role must be an instance of Role enum.")
-        self.role = role
-        
-    def get_status(self):
-        return self.status
-    
-    def set_status(self, status: AccountStatus):
-        self.status = status
+        self._role = value
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value: AccountStatus):
+        self._status = value

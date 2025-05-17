@@ -1,33 +1,47 @@
 class Game:
     def __init__(self, game_id, name, description, price, publisher_id):
-        self.game_id = game_id
-        self.name = name
-        self.description = description
-        self.price = price
-        self.publisher_id = publisher_id
-        
-    def get_game_id(self):
-        return self.game_id
-    
-    def set_game_id(self, game_id): 
-        self.game_id = game_id
-        
-    def get_name(self):
-        return self.name
-    
-    def set_name(self, name):
-        self.name = name
-        
-    def get_description(self):
-        return self.description
-    def set_description(self, description):
-        self.description = description
-    def get_price(self):
-        return self.price
-    def set_price(self, price):
-        self.price = price
-    def get_publisher_id(self):
-        return self.publisher_id
-    def set_publisher_id(self, publisher_id):
-        self.publisher_id = publisher_id
-        
+        self._game_id = game_id
+        self._name = name
+        self._description = description
+        self._price = price
+        self._publisher_id = publisher_id
+
+    @property
+    def game_id(self):
+        return self._game_id
+
+    @game_id.setter
+    def game_id(self, value):
+        self._game_id = value
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    @property
+    def description(self):
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value
+
+    @property
+    def price(self):
+        return self._price
+
+    @price.setter
+    def price(self, value):
+        self._price = value
+
+    @property
+    def publisher_id(self):
+        return self._publisher_id
+
+    @publisher_id.setter
+    def publisher_id(self, value):
+        self._publisher_id = value

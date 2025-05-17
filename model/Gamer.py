@@ -2,19 +2,22 @@ from model.Account import Account
 
 class Gamer(Account):
     def __init__(self, name, password, id):
-        super().__init__(name, password, id, role=Account.Role.GAMER)
-        self.wallet = 0.0
-        self.games = []
+        super().__init__(name, '', password, id, role=Account.Role.GAMER)
+        self._wallet = 0.0
+        self._games = []
 
-    def get_wallet(self):
-        return self.wallet
+    @property
+    def wallet(self):
+        return self._wallet
 
-    def set_wallet(self, wallet):
-        self.wallet = wallet
+    @wallet.setter
+    def wallet(self, value):
+        self._wallet = value
 
-    def get_games(self):
-        return self.games
+    @property
+    def games(self):
+        return self._games
 
-    def set_games(self, games):
-        self.games = games
-
+    @games.setter
+    def games(self, value):
+        self._games = value
