@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus - Library</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='published_games.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header>
+      <div class="logo">
+        <a
+          href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}"
+          >Home</a
+        >
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" />
+        <button>🔍</button>
+      </div>
+      <nav>
+        <a
+          href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}"
+          class="active"
+          >HOME</a
+        >
+        <a href="#">MY GAMES</a>
+        <a href="#">NEW GAME</a>
+        <a href="#">LOGOUT</a>
+      </nav>
+    </header>
+
+    <!-- Game Library Section -->
+    <section class="library">
+      <div id="products">
+        {% for game in games %}
+        <div class="card">
+          <!-- <img
+            src="{{ url_for('static', filename='games/' + game.image_filename) }}"
+            alt="Alien: Isolation"
+          /> -->
+          <img src="asset/games/alienisolation.jpg" alt="{{ game.game_name }}"> 
+          <div class="info">
+            <!-- <h3>Alien: Isolation</h3>
+          <p>Genre: Horror</p>
+          <p>Release: 2014</p> -->
+            <h3>{{ game.game_name }}</h3>
+            <!-- <p>Genre: {{ game.genre }}</p>
+            <p>Release: {{ game.release_year }}</p> -->
+            <p>Price: Rp{{ "{:,.0f}".format(game.game_price) }}</p>
+          </div>
+        </div>
+        {% endfor %}
+        <p>Jumlah game: {{ games|length }}</p>
+
+        {% for game in games %}
+        <div>{{ game.game_name }}</div>
+        {% endfor %}
+      </div>
+    </section>
+  </body>
+</html>

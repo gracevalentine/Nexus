@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nexus - Library</title>
-  <link rel="stylesheet" href="css/library.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='library.css') }}" />
 </head>
 <body>
   <!-- Navbar -->
   <header>
     <div class="logo">
-      <a href="home_page.html">&lt;logo_pic&gt;</a>
+      <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">&lt;logo_pic&gt;</a>
     </div>
     <div class="search-bar">
       <input type="text" placeholder="Search">
       <button>🔍</button>
     </div>
     <nav>
-      <a href="home_page.html">HOME</a>
-      <a href="library.html" class="active">LIBRARY</a>
+      <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">HOME</a>
+      <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}" class="active">LIBRARY</a>
       <a href="#">STORE</a>
       <a href="#">SETTINGS</a>
     </nav>
@@ -35,7 +35,7 @@
           <p>Release: 2014</p>
         </div>
       </div>
-      <div class="card">
+      <!-- <div class="card">
         <img src="asset/games/csgo.jpg" alt="CS:GO">
         <div class="info">
           <h3>CS:GO</h3>
@@ -138,7 +138,7 @@
           <p>Genre: MMORPG</p>
           <p>Release: 2004</p>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 </body>

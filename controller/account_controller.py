@@ -98,7 +98,7 @@ def show_login():
                 elif role == Role.ADMIN:
                     return redirect(url_for('admin_dashboard', admin_id=account_id))
                 elif role == Role.PUBLISHER:
-                    return redirect(url_for('publisher_dashboard', publisher_id=account_id))
+                    return redirect(url_for('publisher.publisher_homepage', publisher_id=account_id))
 
             else:
                 db.close()
