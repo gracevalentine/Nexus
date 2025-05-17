@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from model.Admin import Admin
 from model.Account import Account
-from model.Transaction import Transaction
 from model.AccountStatus import AccountStatus
 from model.Role import Role
 from model.Gamer import Gamer

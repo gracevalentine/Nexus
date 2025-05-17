@@ -94,7 +94,7 @@ def show_login():
 
                 # Redirect sesuai role
                 if role == Role.GAMER:
-                    return redirect(url_for('gamer_dashboard', user_id=account_id))
+                    return redirect(url_for('gamer.gamer_homepage', gamer_id=account_id))
                 elif role == Role.ADMIN:
                     return redirect(url_for('admin_dashboard', admin_id=account_id))
                 elif role == Role.PUBLISHER:
@@ -106,7 +106,6 @@ def show_login():
 
         db.close()
         return render_template('login.html', error='Email tidak ditemukan')
-
     return render_template('login.html')
 
 

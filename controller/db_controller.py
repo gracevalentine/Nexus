@@ -5,6 +5,6 @@ def get_db_connection():
         host="localhost",
         user="root",
         password="",
-        database="testubesrpll"
+        database="nexusdb"
     )
     return db

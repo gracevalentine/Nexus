@@ -37,10 +37,13 @@
 
 # dari yang dea
 from flask import Flask, redirect, url_for, send_from_directory
+from controller.gamer_controller import gamer_bp
 from controller import account_controller
 import os
 
+
 app = Flask(__name__, template_folder='view', static_url_path='/css', static_folder='view/css')
+app.register_blueprint(gamer_bp)
 app.secret_key = 'secretkey123'
 
 # Tambahan: untuk layani CSS dari view/css
@@ -63,6 +66,8 @@ def login_route():
 @app.route('/register', methods=['GET', 'POST'])
 def register_route():
     return account_controller.show_register()
+
+print(app.url_map)
 
 if __name__ == '__main__':
     app.run(debug=True)
