@@ -22,31 +22,30 @@ def show_register():
             db = get_db_connection()
             cursor = db.cursor()
 
+            # Masukkan ke tabel account
+            cursor.execute("""
+                INSERT INTO account (name, email, password, role, status)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (name, email, hashed_pw, role.name, status.name))
+
+            account_id = cursor.lastrowid
+
+            # Jika role-nya GAMER, tambahkan ke tabel gamer_data
             if role == Role.GAMER:
                 cursor.execute("""
-                    INSERT INTO gamer (gamer_name, gamer_email, gamer_password, gamer_role, gamer_status)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (name, email, hashed_pw, role.name, status.name))
-            elif role == Role.PUBLISHER:
-                cursor.execute("""
-                    INSERT INTO publisher (name, email, password, role, status)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (name, email, hashed_pw, role.name, status.name))
-            elif role == Role.ADMIN:
-                cursor.execute("""
-                    INSERT INTO admin (name, email, password, role, status)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (name, email, hashed_pw, role.name, status.name))
-            else:
-                return render_template('signUp.html', error='Invalid role selected')
+                    INSERT INTO gamer_data (account_id, wallet)
+                    VALUES (%s, %s)
+                """, (account_id, 0.0))
 
             db.commit()
-            db.close()
             return redirect(url_for('login_route'))
 
         except Exception as e:
             db.rollback()
             return render_template('signUp.html', error=f"Error: {str(e)}")
+
+        finally:
+            db.close()
 
     return render_template('signUp.html')
 
@@ -57,47 +56,59 @@ def show_login():
 
         db = get_db_connection()
         cursor = db.cursor()
-        cursor.execute("SELECT id, gamer_name, gamer_email, gamer_password, gamer_role, gamer_status FROM accounts WHERE email=%s", (email,))
+
+        # Ambil data dari tabel account
+        cursor.execute("""
+            SELECT id, name, email, password, role, status
+            FROM account
+            WHERE email = %s
+        """, (email,))
         data = cursor.fetchone()
-        db.close()
 
         if data:
-            # Debugging: Print the hashed password from the DB
-            print("Stored hashed password:", data[2])
-            print("Password entered:", password)
+            account_id, name, email, hashed_pw, role_str, status_str = data
+            role = Role[role_str]
+            status = AccountStatus[status_str]
 
-            # Verify password using bcrypt
-            if check_password_hash(data[2], password):  # Check against hashed password
-                account = Account(
-                    name=data[1],
-                    email=email,
-                    password=data[2],  # hashed password (nggak perlu disimpan kalau ga dipakai)
-                    id=data[0],
-                    role=Role[data[3]],
-                    status=AccountStatus[data[4]]
-                )
-
-                if account.status == AccountStatus.BANNED:
+            if check_password_hash(hashed_pw, password):
+                if status == AccountStatus.BANNED:
                     return render_template('login.html', error='Akun anda telah diblokir')
 
-                session['account_id'] = account.id
-                session['username'] = account.name
-                session['role'] = account.role.name
+                # Optional: ambil data tambahan kalau role-nya GAMER
+                wallet = None
+                if role == Role.GAMER:
+                    cursor.execute("""
+                        SELECT wallet FROM gamer_data WHERE account_id = %s
+                    """, (account_id,))
+                    gamer_row = cursor.fetchone()
+                    wallet = gamer_row[0] if gamer_row else 0.0
 
-                # Redirect berdasar role
-                if account.role == Role.GAMER:
-                    return redirect(url_for('gamer_dashboard', user_id=account.id))
-                elif account.role == Role.ADMIN:
-                    return redirect(url_for('admin_dashboard', admin_id=account.id))
-                elif account.role == Role.PUBLISHER:
-                    return redirect(url_for('publisher_dashboard', publisher_id=account.id))
+                db.close()
+
+                # Simpan session
+                session['account_id'] = account_id
+                session['username'] = name
+                session['role'] = role.name
+                if wallet is not None:
+                    session['wallet'] = float(wallet)
+
+                # Redirect sesuai role
+                if role == Role.GAMER:
+                    return redirect(url_for('gamer_dashboard', user_id=account_id))
+                elif role == Role.ADMIN:
+                    return redirect(url_for('admin_dashboard', admin_id=account_id))
+                elif role == Role.PUBLISHER:
+                    return redirect(url_for('publisher_dashboard', publisher_id=account_id))
+
             else:
+                db.close()
                 return render_template('login.html', error='Email atau password salah')
 
-        else:
-            return render_template('login.html', error='Email tidak ditemukan')
+        db.close()
+        return render_template('login.html', error='Email tidak ditemukan')
 
     return render_template('login.html')
+
 
 def home():
     if 'account_id' not in session:
@@ -105,8 +116,10 @@ def home():
     
     return render_template('home.html', username=session.get('username'), role=session.get('role'))
 
+
 def dashboard_route():
     return f"Welcome {session.get('username')} as {session.get('role')}"
+
 
 def logout():
     session.clear()
