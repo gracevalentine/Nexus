@@ -11,7 +11,7 @@ def show_register():
         password = request.form['password']
         confirm_password = request.form['confirm-password']
         role = Role[request.form['role'].upper()]
-        status = AccountStatus.ACTIVE
+        status = AccountStatus.NOT_BANNED
 
         if password != confirm_password:
             return render_template('signUp.html', error='Passwords do not match')

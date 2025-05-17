@@ -5,6 +5,7 @@ from model.Transaction import Transaction
 from model.AccountStatus import AccountStatus
 from model.Role import Role
 from model.Gamer import Gamer
+from controller.db_controller import db
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 

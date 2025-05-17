@@ -48,6 +48,10 @@ app.secret_key = 'secretkey123'
 def custom_css(filename):
     return send_from_directory(os.path.join('view', 'css'), filename)
 
+@app.route('/view/<path:filename>')
+def custom_view_static(filename):
+    return send_from_directory('view', filename)
+
 @app.route('/')
 def index():
     return redirect(url_for('login_route'))

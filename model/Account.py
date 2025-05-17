@@ -2,7 +2,7 @@ from model.AccountStatus import AccountStatus
 from model.Role import Role  # asumsi Role.py disimpan di model juga
 
 class Account:
-    def __init__(self, name='', email='', password='', id=0, role: Role = None, status=AccountStatus.ACTIVE):
+    def __init__(self, name='', email='', password='', id=0, role: Role = None, status=AccountStatus.NOT_BANNED):
         if not isinstance(role, Role):
             raise TypeError("role must be an instance of Role enum.")
         
