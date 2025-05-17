@@ -96,7 +96,7 @@ def show_login():
                 if role == Role.GAMER:
                     return redirect(url_for('gamer.gamer_homepage', gamer_id=account_id))
                 elif role == Role.ADMIN:
-                    return redirect(url_for('admin_dashboard', admin_id=account_id))
+                    return redirect(url_for('admin.admin_homepage', admin_id=account_id))
                 elif role == Role.PUBLISHER:
                     return redirect(url_for('publisher_dashboard', publisher_id=account_id))
 
