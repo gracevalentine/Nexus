@@ -1,46 +1,42 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, redirect, url_for, send_from_directory
+from controller.gamer_controller import gamer_bp
+from controller.publisher_controller import publisher_bp 
+from controller.admin_controller import admin_bp
 from controller import account_controller
-from model.AccountStatus import AccountStatus
+import os
 
-app = Flask(__name__, template_folder='view')
+
+app = Flask(__name__, template_folder='view', static_url_path='/css', static_folder='view/css')
+app.register_blueprint(gamer_bp)
+app.register_blueprint(publisher_bp) 
+app.register_blueprint(admin_bp)
+app.secret_key = 'secretkey123'
+
+# Tambahan: untuk layani CSS dari view/css
+@app.route('/css/<path:filename>')
+def custom_css(filename):
+    return send_from_directory(os.path.join('view', 'css'), filename)
+
+@app.route('/view/<path:filename>')
+def custom_view_static(filename):
+    return send_from_directory('view', filename)
 
 @app.route('/')
-def home():
-    return render_template('home_page.html')
+def index():
+    return redirect(url_for('login_route'))
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
+def login_route():
+    return account_controller.show_login()
 
-    if request.method == 'POST':
-        username = request.form['email']
-        password = request.form['password']
+@app.route('/register', methods=['GET', 'POST'])
+def register_route():
+    return account_controller.show_register()
 
-        account = account_controller.get_account(username, password)
-
-        if account and account.status == AccountStatus.ACTIVE:
-            if account.role.name == "GAMER":
-                return redirect(url_for('gamer_dashboard', user_id=account.id))
-            elif account.role.name == "ADMIN":
-                return redirect(url_for('admin_dashboard', admin_id=account.id))
-            elif account.role.name == "PUBLISHER":
-                return redirect(url_for('publisher_dashboard', publisher_id=account.id))
-        else:
-            error = "Invalid username or password"
-
-    return render_template('login.html', error=error)
-
-@app.route('/gamer/<int:user_id>')
-def gamer_dashboard(user_id):
-    return f"Welcome Gamer #{user_id}!"
-
-@app.route('/admin/<int:admin_id>')
-def admin_dashboard(admin_id):
-    return f"Welcome Admin #{admin_id}!"
-
-@app.route('/publisher/<int:publisher_id>')
-def publisher_dashboard(publisher_id):
-    return f"Welcome Publisher #{publisher_id}!"
+# print(app.url_map)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
