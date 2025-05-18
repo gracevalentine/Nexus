@@ -34,6 +34,7 @@ def register_route():
     return account_controller.show_register()
 
 # print(app.url_map)
+app.add_url_rule('/logout', 'logout', account_controller.logout)
 
 if __name__ == '__main__':
     app.run(debug=True)

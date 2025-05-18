@@ -8,7 +8,79 @@ body {
 .container {
     display: flex;
 }
+header {
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
+.logo a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.logo a:hover {
+    color: #1e90ff;
+    transform: scale(1.1);
+}
+
+.search-bar {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 20px;
+    display: flex;
+    border: 1px solid #555;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.search-bar:hover {
+    box-shadow: 0 0 10px #1e90ff;
+}
+
+.search-bar input {
+    padding: 10px;
+    flex: 1;
+    border: none;
+    outline: none;
+    background: #000;
+    color: white;
+}
+
+.search-bar button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+nav a:hover,
+nav a.active {
+    color: #1e90ff;
+    transform: scale(1.1);
+}
 .sidebar {
     width: 200px;
     background-color: #292929;

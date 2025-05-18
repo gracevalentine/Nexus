@@ -7,6 +7,22 @@
     <title>{% if is_edit %}Edit Game{% else %}Add New Game{% endif %}</title>
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Home</a>
+
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button>🔍</button>
+        </div>
+        <nav>
+            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}" class="active">HOME</a>
+            <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">MY GAMES</a>
+            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">NEW GAME</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </nav>
+    </header>
     <div class="container">
         <div class="sidebar">
             <h2>My Games</h2>

@@ -18,3 +18,7 @@ def gamer_homepage(gamer_id):
 @gamer_bp.route('/library/<int:gamer_id>')
 def gamer_library(gamer_id):
     return render_template('library.html', gamer_id=gamer_id)
+
+@gamer_bp.route('/storepage/<int:gamer_id>')
+def gamer_storepage(gamer_id):
+    return render_template('store_category_page.html', gamer_id=gamer_id)

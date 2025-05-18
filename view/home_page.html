@@ -22,7 +22,7 @@
             <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}" class="active">HOME</a>
             <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}">LIBRARY</a>
             <a href="store_category_page.html">STORE</a>
-            <a href="#">SETTINGS</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
         </nav>
     </header>
 

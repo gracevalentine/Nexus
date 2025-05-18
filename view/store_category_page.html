@@ -4,23 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Nexus - Store</title>
-    <link rel="stylesheet" href="css/store_category_page.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='store_category_page.css') }}">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="home_page.html">&lt;logo_pic&gt;</a>
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">&lt;logo_pic&gt;</a>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search">
             <button>🔍</button>
         </div>
         <nav>
-            <a href="home_page.html">HOME</a>
-            <a href="library.html">LIBRARY</a>
-            <a href="store_category_page.html" class="active">STORE</a>
-            <a href="#">SETTINGS</a>
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}" class="active">HOME</a>
+            <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}">LIBRARY</a>
+            <a href="store_category_page.html">STORE</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
         </nav>
     </header>
 
