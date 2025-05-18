@@ -1,15 +1,14 @@
-/* Navbar */
-
-* {
-    box-sizing: border-box;
+body {
     margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #000;
-    color: white;
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 header {
@@ -85,6 +84,25 @@ nav a.active {
     color: #1e90ff;
     transform: scale(1.1);
 }
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+.sort {
+    margin-bottom: 20px;
+}
+
+.games {
+    display: flex;
+    gap: 20px;
+}
+
+.game img {
+    width: 150px;
+    height: auto;
+    border-radius: 8px;
+}
 
 #products {
     display: flex;
@@ -142,7 +160,6 @@ nav a.active {
     margin: 5px 0 0;
     font-size: 0.9rem;
 }
-
 
 /* Responsive */
 @media (max-width: 768px) {
