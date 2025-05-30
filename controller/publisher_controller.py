@@ -33,9 +33,7 @@ def add_new_game(publisher_id):
         price = request.form['price-game']
         image_file = request.files.get('image')
         
-        # image_data = image_file.read() if image_file else None
         image_data = image_file.read()
-        # Untuk sekarang, abaikan image, simpan null dulu
         db = get_db_connection()
         cursor = db.cursor()
         cursor.execute(

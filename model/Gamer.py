@@ -1,8 +1,9 @@
 from model.Account import Account
+from model.Role import Role
 
 class Gamer(Account):
     def __init__(self, name, password, id):
-        super().__init__(name, '', password, id, role=Account.Role.GAMER)
+        super().__init__(name, '', password, id, role=Role.GAMER)
         self._wallet = 0.0
         self._games = []
 

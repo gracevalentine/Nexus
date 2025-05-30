@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus - Wallet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='gamer_wallet.css') }}" />
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+        </div>
+        <nav>
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">HOME</a>
+            <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}">LIBRARY</a>
+            <a href="{{ url_for('gamer.gamer_storepage', gamer_id=gamer_id) }}">STORE</a>
+            <a href="{{ url_for('gamer.wallet_page', gamer_id=gamer_id) }}" class="active">WALLET</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </nav>
+    </header>
+
+    <main class="wallet-container">
+        <div id="topupModal" class="topup-modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeTopupModal()">&times;</span>
+                <h3>Top Up Wallet</h3>
+                <input type="number" id="topupAmount" placeholder="Masukkan jumlah (Rp)" min="1000" step="1000" />
+                <button class="blue-button" onclick="submitTopup('{{ gamer_id }}')">Konfirmasi Top Up</button>
+            </div>
+        </div>
+        <h1>Wallet Anda</h1>
+        <div class="wallet-balance">
+            <span>Saldo saat ini:</span>
+            <h2>Rp {{ wallet_balance }}</h2>
+            <button class="topup-btn" onclick="openTopupModal()">TOP UP</button>
+        </div>
+
+        <div class="transaction-history">
+            <h3>Riwayat Transaksi</h3>
+            {% if transactions %}
+                <ul>
+                    {% for tx in transactions %}
+                    <li>
+                        <div>{{ tx.date }}</div>
+                        <div>{{ tx.description }}</div>
+                        <div class="{{ 'minus' if tx.amount < 0 else 'plus' }}">
+                            Rp {{ "%.0f"|format(tx.amount) }}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Belum ada transaksi.</p>
+            {% endif %}
+        </div>
+    </main>
+    <script>
+    function openTopupModal() {
+        document.getElementById("topupModal").style.display = "block";
+    }
+
+    function closeTopupModal() {
+        document.getElementById("topupModal").style.display = "none";
+    }
+
+    function submitTopup(gamerId) {
+        const amount = parseInt(document.getElementById("topupAmount").value);
+        if (!amount || amount < 1000) {
+            alert("Minimal top up Rp 1.000");
+            return;
+        }
+
+        fetch(`/gamer/wallet/topup/${gamerId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ amount: amount })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("Top up berhasil!");
+                location.reload();  // refresh saldo
+            } else {
+                alert("Top up gagal: " + data.message);
+            }
+        });
+    }
+    </script>
+
+</body>
+
+</html>

@@ -8,7 +8,7 @@ class Order:
         return self._order_id
 
     @order_id.setter
-    def cart_id(self, value):
+    def order_id(self, value):
         self._order_id = value
 
     @property
@@ -16,6 +16,6 @@ class Order:
         return self._gamer_id
 
     @gamer_id.setter
-    def item_id(self, value):
+    def gamer_id(self, value):
         self._gamer_id = value
 

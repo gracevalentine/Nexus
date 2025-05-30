@@ -9,7 +9,7 @@
 <body>
     <header>
         <div class="logo">
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Home</a>
+            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Nexus</a>
 
         </div>
         <div class="search-bar">
@@ -47,7 +47,7 @@
                 <label for="genre">Genre</label>
                 <select id="genre" name="genre" required>
                     <option value="">Select Genre</option>
-                    {% for genre in ['Action', 'Action-Adventure', 'Adventure', 'Classic', 'Horror'] %}
+                    {% for genre in ['Action', 'Action-Adventure', 'Adventure', 'Casual', 'Racing', 'Sports', 'Horror'] %}
                     <option value="{{ genre }}" {% if is_edit and game.game_genre == genre %}selected{% endif %}>{{ genre }}</option>
                     {% endfor %}
                 </select>

@@ -5,7 +5,6 @@ from controller.admin_controller import admin_bp
 from controller import account_controller
 import os
 
-
 app = Flask(__name__, template_folder='view', static_url_path='/css', static_folder='view/css')
 app.register_blueprint(gamer_bp)
 app.register_blueprint(publisher_bp) 

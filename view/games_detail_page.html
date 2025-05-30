@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexus - Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='games_detail_page.css') }}" />
+</head>
+
+<body>
+    <!-- Navbar -->
+    <header>
+        <div class="logo">
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button>🔍</button>
+        </div>
+        <nav>
+            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">HOME</a>
+            <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}">LIBRARY</a>
+            <a href="{{ url_for('gamer.gamer_storepage', gamer_id=gamer_id) }}" class="active">STORE</a>
+            <a href="{{ url_for('gamer.wallet_page', gamer_id=gamer_id) }}">WALLET</a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </nav>
+    </header>
+
+    <!-- Filters -->
+    <section class="store-filters">
+        <div class="filter-group">
+            <!-- Filter 1 -->
+            <div class="dropdown-filter">
+                <button class="dropbtn" id="filter-button" onclick="toggleDropdown('filter-dropdown')">All Games (total)</button>
+                <div class="dropdown-content" id="filter-dropdown">
+                    <a href="#" onclick="selectDropdownOption('filter-button', 'All Games (xx)')">All Games</a>
+                    <a href="#" onclick="selectDropdownOption('filter-button', 'New & Trending')">New & Trending</a>
+                    <a href="#" onclick="selectDropdownOption('filter-button', 'Top Sellers')">Top Sellers</a>
+                    <a href="#" onclick="selectDropdownOption('filter-button', 'Top Rated')">Top Rated</a>
+                </div>
+            </div>
+
+            <!-- Filter 2 -->
+            <div class="dropdown-sort">
+                <span>SORT BY</span>
+                <button class="dropbtn" id="sort-button" onclick="toggleDropdown('sort-dropdown')">Alphabetical</button>
+                <div class="dropdown-content" id="sort-dropdown">
+                    <a href="#" onclick="selectDropdownOption('sort-button', 'Alphabetical A-Z')">Alphabetical A-Z</a>
+                    <a href="#" onclick="selectDropdownOption('sort-button', 'Alphabetical Z-A')">Alphabetical Z-A</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Cards -->
+    <section class="store-grid">
+    {% for game in games %}
+        <div class="card" onclick="showModal(`{{ game.name|escape }}`, `{{ game.image }}`, `{{ game.description|escape }}`, `{{ game.price }}`, `{{ game.publisher|escape }}`, `{{ game.id }}`)">
+            <img src="{{ game.image }}" alt="{{ game.name }}">
+            <div class="hover-title">{{ game.name }}</div>
+        </div>
+    {% endfor %}
+    </section>
+
+    <!-- Pop-Up -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Game Cover" />
+                <div class="modal-details">
+                    <h2 id="modal-title">Game Title</h2>
+                    <p id="modal-price">Price</p>
+                    <p id="modal-description">Game description goes here. This is a brief overview of the game, its features, and what players can expect.</p>
+                    <p id="modal-publisher">Created by: <span id="modal-publisher-name">Publisher Name</span></p>
+                    <button class="blue-button" onclick="confirmBuy()">BUY NOW</button>
+                    <button class="blue-button">ADD TO CART</button>
+                    <button class="blue-button">ADD TO WISHLIST</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedGameId = null;
+        let selectedPrice = null;
+        let selectedGamerId = '{{ gamer_id }}';
+    // ======= DROPDOWN =======
+    function toggleDropdown(id) {
+        document.querySelectorAll('.dropdown-content').forEach(drop => {
+            if (drop.id !== id) {
+                drop.classList.remove('show');
+            }
+        });
+
+        const dropdown = document.getElementById(id);
+        dropdown.classList.toggle('show');
+    }
+
+    function selectDropdownOption(buttonId, value) {
+        document.getElementById(buttonId).innerText = value;
+        document.querySelectorAll('.dropdown-content').forEach(drop => {
+            drop.classList.remove('show');
+        });
+    }
+
+    function confirmBuy() {
+        const yakin = confirm("Apakah kamu yakin ingin membeli game ini?");
+
+        if (!yakin) return;
+
+        console.log("Klik BUY NOW");
+
+        fetch(`/gamer/buy/${selectedGamerId}/${selectedGameId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Response dari server:", data); // debug
+            if (data.status === "success") {
+                alert("Pembelian berhasil!");
+                location.reload();
+            } else {
+                alert("Gagal beli: " + data.message);
+            }
+        })
+        .catch(err => {
+            alert("Terjadi kesalahan: " + err);
+        });
+    }
+
+    window.addEventListener('click', function (e) {
+        if (!e.target.matches('.dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(drop => {
+                drop.classList.remove('show');
+            });
+        }
+    });
+
+    // ======= POP-UP GAME CARD =======
+    function showModal(title, image, description, price, publisher, gameId) {
+        document.getElementById("modal-img").src = image;
+        document.getElementById("modal-title").textContent = title;
+        document.getElementById("modal-description").textContent = description;
+        document.getElementById("modal-publisher-name").textContent = publisher;
+        document.getElementById("modal-price").textContent = "Rp " + price;
+        document.getElementById("gameModal").style.display = "block";
+
+        // Simpan ID dan harga game untuk BUY NOW
+        selectedGameId = gameId;
+        selectedPrice = price;
+
+        if (ownedGames.includes(parseInt(gameId))) {
+            document.querySelector('button[onclick="confirmBuy()"]').style.display = "none";
+        } else {
+            document.querySelector('button[onclick="confirmBuy()"]').style.display = "inline-block";
+        }
+    }
+
+    document.querySelector(".close-button").addEventListener("click", () => {
+        document.getElementById("gameModal").style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === document.getElementById("gameModal")) {
+            document.getElementById("gameModal").style.display = "none";
+        }
+    });
+    </script>
+
+</body>
+
+</html>
