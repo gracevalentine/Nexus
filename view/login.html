@@ -12,7 +12,13 @@
   <div class="navbar">
     <h1>Nexus</h1>
   </div>
-
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+      {% endif %}
+    {% endwith %}
   <div class="login-container">
     <div class="login-box">
       <h2>Login</h2>
