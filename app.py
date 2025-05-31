@@ -11,7 +11,6 @@ app.register_blueprint(publisher_bp)
 app.register_blueprint(admin_bp)
 app.secret_key = 'secretkey123'
 
-# Tambahan: untuk layani CSS dari view/css
 @app.route('/css/<path:filename>')
 def custom_css(filename):
     return send_from_directory(os.path.join('view', 'css'), filename)
@@ -19,6 +18,10 @@ def custom_css(filename):
 @app.route('/view/<path:filename>')
 def custom_view_static(filename):
     return send_from_directory('view', filename)
+
+@app.route('/view/asset/<path:filename>')
+def bacground_admin(filename):
+    return send_from_directory('view/asset', filename)
 
 @app.route('/')
 def index():
