@@ -1,5 +1,4 @@
 from flask import Blueprint, abort, render_template, request, redirect, url_for
-from model.Admin import Admin
 from model.Account import Account
 from model.AccountStatus import AccountStatus
 from model.Role import Role
@@ -55,31 +54,6 @@ def ban_gamer(gamer_id):
 
     return redirect(url_for('admin.admin_view_gamer_controller', admin_id=admin_id))
 
-@admin_bp.route('/View Ban Gamer/<int:admin_id>')
-def admin_view_banned_gamer_controller(admin_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)  # biar bisa akses kolom pakai nama
-
-    cursor.execute("""
-        SELECT 
-            account.id, 
-            account.name, 
-            account.status, 
-            account.role, 
-            ban_detail.ban_reason, 
-            ban_detail.ban_date
-        FROM account
-        JOIN ban_detail ON account.id = ban_detail.account_id
-        WHERE account.role = %s AND account.status = %s
-    """, (Role.GAMER.name, AccountStatus.BANNED.name))
-
-    gamers = cursor.fetchall()
-
-    cursor.close()
-    conn.close()
-
-    return render_template('view_banned_gamer.html', admin_id=admin_id, gamers=gamers)
-
 @admin_bp.route('/unbannedGamer/<int:gamer_id>')
 def unban_gamer(gamer_id):
     admin_id = request.args.get('admin_id')
@@ -107,18 +81,18 @@ def unban_gamer(gamer_id):
     cursor.close()
     conn.close()
 
-    return redirect(url_for('admin.admin_view_unbanned_gamer_controller', admin_id=admin_id))
+    return redirect(url_for('admin.admin_view_banned_gamer_controller', admin_id=admin_id))
 
 @admin_bp.route('/search_user', methods=['GET'])
 def search_user():
     admin_id = request.args.get('admin_id')
-    username = request.args.get('username', '')  # kasih default kosong biar gak error
+    username = request.args.get('username', '')  
 
     if not admin_id:
         abort(400, description="admin_id is required")
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)  # PENTING: dictionary=True biar hasilnya dict
+    cursor = conn.cursor(dictionary=True)
 
     # Cek apakah admin_id memang admin
     cursor.execute("SELECT role FROM account WHERE id = %s", (admin_id,))
@@ -137,6 +111,39 @@ def search_user():
     conn.close()
 
     return render_template('admin_view_gamer.html', admin_id=admin_id, gamers=gamers)
+
+@admin_bp.route('/search_banned_user', methods=['GET'])
+def search_banned_user():
+    admin_id = request.args.get('admin_id')
+    username = request.args.get('username', '')
+
+    if not admin_id:
+        abort(400, description="admin_id is required")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Cek admin
+    cursor.execute("SELECT role FROM account WHERE id = %s", (admin_id,))
+    result = cursor.fetchone()
+    if not result or result['role'] != Role.ADMIN.name:
+        cursor.close()
+        conn.close()
+        abort(403, description="Access forbidden. You must be an admin.")
+
+    query = """
+    SELECT a.id, a.name, a.status, a.role, b.ban_reason
+    FROM account a
+    JOIN ban_detail b ON a.id = b.account_id
+    WHERE a.role = %s AND a.status = %s AND a.name LIKE %s
+    """
+    cursor.execute(query, (Role.GAMER.name, AccountStatus.BANNED.name, f"%{username}%"))
+    gamers = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('admin_view_banned_gamer.html', admin_id=admin_id, gamers=gamers)
 
 @admin_bp.route('/View Gamer/<int:admin_id>')
 def admin_view_gamer_controller(admin_id):
@@ -162,13 +169,19 @@ def admin_view_gamer_controller(admin_id):
     
     return render_template('admin_view_gamer.html', admin_id=admin_id, gamers=gamers)
 
-@admin_bp.route('/View Unbanned Gamer/<int:admin_id>')
-def admin_view_unbanned_gamer_controller(admin_id):
+@admin_bp.route('/View banned Gamer/<int:admin_id>')
+def admin_view_banned_gamer_controller(admin_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT id, name, status, role FROM account WHERE role = %s AND status = %s", 
-                   (Role.GAMER.name, AccountStatus.BANNED.name))
+    # Query gabungan untuk ambil data banned gamer + alasan banned
+    cursor.execute("""
+        SELECT a.id, a.name, a.status, a.role, b.ban_reason 
+        FROM account a
+        JOIN ban_detail b ON a.id = b.account_id
+        WHERE a.role = %s AND a.status = %s
+    """, (Role.GAMER.name, AccountStatus.BANNED.name))
+
     rows = cursor.fetchall()
 
     gamers = []
@@ -178,9 +191,11 @@ def admin_view_unbanned_gamer_controller(admin_id):
             'name': row[1],
             'status': row[2],
             'role': row[3],
+            'ban_reason': row[4]
         })
 
     cursor.close()
     conn.close()
 
-    return render_template('admin_unbanned_gamer.html', admin_id=admin_id, gamers=gamers)
+    return render_template('admin_view_banned_gamer.html', admin_id=admin_id, gamers=gamers)
+

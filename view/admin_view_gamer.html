@@ -9,68 +9,67 @@
 </head>
 <body>
 
-    <!-- Navbar opsional -->
-    <div class="navbar">
-        <h1>Admin Panel</h1>
-        <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+  <!-- Header container untuk judul + search bar -->
+  <div class="navbar">
+    <h1>Admin Panel</h1>
+    <form method="GET" action="{{ url_for('admin.search_user') }}" class="search-box">
+      <input type="hidden" name="admin_id" value="{{ admin_id }}">
+      <input type="text" name="username" placeholder="Type the user's name" />
+      <button type="submit">🔍</button>
+    </form>
+  </div>
+
+  <!-- Logout tetap di kanan atas, kamu bisa buat fixed position jika perlu -->
+  <a class="logout" href="{{ url_for('logout') }}" style="position: fixed; top: 20px; right: 30px;">Logout</a>
+
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Admin Menu</h2>
+      <a href="{{ url_for('admin.admin_view_gamer_controller', admin_id=admin_id) }}" class="active">View Gamer</a>
+      <a href="{{ url_for('admin.admin_view_banned_gamer_controller', admin_id=admin_id) }}" class="active">View Banned Gamer</a>
     </div>
 
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h2>Admin Menu</h2>
-            <a href="{{ url_for('admin.admin_view_gamer_controller', admin_id=admin_id) }}" class="active">View Gamer</a>
-            <a href="{{ url_for('admin.admin_view_unbanned_gamer_controller', admin_id=admin_id) }}" class="active">View Banned Gamer</a>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="search-box">
-                <form method="GET" action="{{ url_for('admin.search_user') }}">
-                    <input type="hidden" name="admin_id" value="{{ admin_id }}">
-                    <input type="text" name="username" placeholder="Type the user's name">
-                    <button type="submit">🔍</button>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Acc Status</th>
-                        <th>Acc Type</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for gamer in gamers %}
-                    <tr>
-                        <td>{{ gamer.name }}</td>
-                        <td>{{ gamer.status }}</td>
-                        <td>{{ gamer.role }}</td>
-                        <td>
-                            {% if gamer.status != 'BANNED' %}
-                            <form method="POST" action="{{ url_for('admin.ban_gamer', gamer_id=gamer.id) }}">
-                                <input type="hidden" name="admin_id" value="{{ admin_id }}">
-                                <select name="ban_reason" required>
-                                    <option value="" disabled selected>Choose reason</option>
-                                    <option value="SPAM">Spam</option>
-                                    <option value="CHEATING">Cheating</option>
-                                    <option value="ABUSE">Abuse</option>
-                                    <option value="OTHER">Other</option>
-                                </select>
-                                <button type="submit">Ban</button>
-                            </form>
-                            {% else %}
-                            <span class="banned">Banned</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <!-- Main Content -->
+    <div class="main-panel">
+      <table class="gamer-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Acc Status</th>
+            <th>Acc Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for gamer in gamers %}
+          <tr>
+            <td>{{ gamer.name }}</td>
+            <td>{{ gamer.status }}</td>
+            <td>{{ gamer.role }}</td>
+            <td>
+              {% if gamer.status != 'BANNED' %}
+              <form method="POST" action="{{ url_for('admin.ban_gamer', gamer_id=gamer.id) }}" class="ban-form">
+                <input type="hidden" name="admin_id" value="{{ admin_id }}">
+                <select name="ban_reason" required>
+                  <option value="" disabled selected>Choose reason</option>
+                  <option value="SPAM">SPAM</option>
+                  <option value="CHEATING">CHEATING</option>
+                  <option value="ABUSE">ABUSE</option>
+                  <option value="OTHER">OTHER</option>
+                </select>
+                <button type="submit" class="ban-button">Ban</button>
+              </form>
+              {% else %}
+              <span class="banned-text">Banned</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 
 </body>
 </html>
