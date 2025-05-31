@@ -19,7 +19,6 @@
     </form>
   </div>
 
-  <!-- Logout tetap di kanan atas, kamu bisa buat fixed position jika perlu -->
   <a class="logout" href="{{ url_for('logout') }}" style="position: fixed; top: 20px; right: 30px;">Logout</a>
 
     <div class="dashboard-container">
@@ -30,7 +29,6 @@
             <a href="{{ url_for('admin.admin_view_banned_gamer_controller', admin_id=admin_id) }}" class="active">View Banned Gamer</a>
         </div>
 
-        <!-- Main Content -->
         <div class="main-panel">
             <table class="gamer-table">
                     <thead>
