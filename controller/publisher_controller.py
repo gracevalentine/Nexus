@@ -1,4 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from PIL import Image  
+import io
 import base64
 from controller.db_controller import get_db_connection 
 
@@ -32,8 +34,17 @@ def add_new_game(publisher_id):
         genre = request.form['genre']
         price = request.form['price-game']
         image_file = request.files.get('image')
-        
-        image_data = image_file.read()
+
+        image_data = None
+        if image_file:
+
+            img = Image.open(image_file)
+            img.thumbnail((600, 600))  # Resize max 600x600
+
+            buffer = io.BytesIO()
+            img.save(buffer, format='JPEG', quality=85)
+            image_data = buffer.getvalue()
+
         db = get_db_connection()
         cursor = db.cursor()
         cursor.execute(
@@ -47,6 +58,7 @@ def add_new_game(publisher_id):
         return redirect(url_for('publisher.published_games', publisher_id=publisher_id))
     
     return render_template('publisher_new_game.html', publisher_id=publisher_id)
+
 
 @publisher_bp.route('/edit_game/<int:publisher_id>/<int:game_id>', methods=['GET', 'POST'])
 def edit_game(publisher_id, game_id):
