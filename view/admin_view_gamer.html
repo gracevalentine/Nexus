@@ -50,9 +50,19 @@
                         <td>{{ gamer.role }}</td>
                         <td>
                             {% if gamer.status != 'BANNED' %}
-                                <a href="{{ url_for('admin.ban_gamer', gamer_id=gamer.id, admin_id=admin_id) }}">Ban</a>
+                            <form method="POST" action="{{ url_for('admin.ban_gamer', gamer_id=gamer.id) }}">
+                                <input type="hidden" name="admin_id" value="{{ admin_id }}">
+                                <select name="ban_reason" required>
+                                    <option value="" disabled selected>Choose reason</option>
+                                    <option value="SPAM">Spam</option>
+                                    <option value="CHEATING">Cheating</option>
+                                    <option value="ABUSE">Abuse</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                                <button type="submit">Ban</button>
+                            </form>
                             {% else %}
-                                <span class="banned">Banned</span>
+                            <span class="banned">Banned</span>
                             {% endif %}
                         </td>
                     </tr>
