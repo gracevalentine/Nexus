@@ -11,7 +11,13 @@
     <div class="navbar">
       <h1>Nexus</h1>
     </div>
-
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+      {% endif %}
+    {% endwith %}
     <div class="container">
       <h1>Sign-Up Page</h1>
       <p>Please <a href="{{ url_for('login_route') }}">login</a> if you have an account.</p>
