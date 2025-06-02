@@ -61,7 +61,7 @@ def login_controller():
 
             elif role == Role.ADMIN:
                 flash('Berhasil login sebagai admin!')
-                return render_template(f'{role.name.lower()}/admin_homepage.html', username=name, role=role.name)
+                return render_template(f'{role.name.lower()}/auth.admin_view_gamer.html', username=name, role=role.name)
 
             elif role == Role.PUBLISHER:
                 flash('Berhasil login sebagai publisher!')

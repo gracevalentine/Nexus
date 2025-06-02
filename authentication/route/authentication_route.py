@@ -20,3 +20,10 @@ def gamer_homepage(gamer_id):
     wallet = session.get('wallet', 0)
     username = session.get('username', 'Guest')
     return render_template('gamer_homepage.html', gamer_id=gamer_id, wallet_balance=wallet, username=username)
+
+@account_bp.route('/admin_homepage/<int:admin_id>')
+def admin_homepage(admin_id):
+    if 'username' not in session:
+        return redirect(url_for('auth.login_controller'))
+    return render_template('admin_view_gamer.html', admin_id=admin_id, username=session.get('username', 'Admin'))
+
