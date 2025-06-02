@@ -56,9 +56,16 @@ def login_controller():
             if role == Role.GAMER:
                 wallet = authentication_repository.get_gamer_wallet(account_id)
                 session['wallet'] = float(wallet)
+                flash('Berhasil login!')
+                return redirect(url_for('auth.gamer_homepage', gamer_id=account_id))  
 
-            flash('Berhasil login!')
-            return render_template(f'{role.name.lower()}/homepage.html', username=name, role=role.name)
+            elif role == Role.ADMIN:
+                flash('Berhasil login sebagai admin!')
+                return render_template(f'{role.name.lower()}/admin_homepage.html', username=name, role=role.name)
+
+            elif role == Role.PUBLISHER:
+                flash('Berhasil login sebagai publisher!')
+                return render_template(f'{role.name.lower()}/publisher_homepage.html', username=name, role=role.name)
 
         flash('Email tidak ditemukan.')
         return redirect(url_for('auth.login_controller'))
