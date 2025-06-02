@@ -1,12 +1,21 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('/view/asset/games/webp/the-last-of-us-listing-thumb-01-ps3-us-20nov14.png') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     color: #fff;
+}
+
+.background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1; /* supaya elemen lain di atas gambar */
 }
 
 .navbar {
@@ -15,6 +24,7 @@ body {
     display: flex;
     align-items: center;
     animation: fadeInDown 1s ease;
+    -webkit-animation: fadeInDown 1s ease;
 }
 
 .navbar h1 {
