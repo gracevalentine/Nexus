@@ -1,63 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Published Games</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='published_games.css') }}">
+  <title>Publisher – My Games</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='published_games.css') }}" />
 </head>
+
 <body>
-  <!-- Navbar -->
+  <!-- Top Navbar -->
   <header>
     <div class="logo">
-      <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Home</a>
+      <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">&lt;logo_pic&gt;</a>
     </div>
-    <div class="search-bar">
-      <input type="text" placeholder="Search" />
-      <button>🔍</button>
-    </div>
-    <nav>
-      <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}" class="active">HOME</a>
-      <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">MY GAMES</a>
-      <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">NEW GAME</a>
+    <nav class="top-nav">
+      <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">HOME</a>
       <a href="{{ url_for('logout') }}">LOGOUT</a>
     </nav>
   </header>
 
-  <!-- Game Library Section -->
-  <section class="library">
-    <div id="products">
-      {% for game in games %}
-      <div class="card">
-        {% if game.image_data %}
-          <img src="data:image/jpeg;base64,{{ game.image_data }}" alt="{{ game.game_name }}">
-        {% else %}
-          <img src="{{ url_for('static', filename='games/default.jpg') }}" alt="Default Image">
-        {% endif %}
-        <div class="info">
-          <h3>{{ game.game_name }}</h3>
-          <p>Genre: {{ game.game_genre }}</p>
-          <p>Price: Rp{{ "{:,.0f}".format(game.game_price) }}</p>
-          <button class="delete-button" onclick="confirmDelete({{ game.game_id }}, {{ publisher_id }})">Delete</button>
-          <button class="edit-button" onclick="location.href='{{ url_for('publisher.edit_game', publisher_id=publisher_id, game_id=game.game_id) }}'">Edit</button>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </section>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}" class="active">
+            My Games
+          </a>
+        </li>
+        <li>
+          <!-- add_new_game -->
+          <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">
+            Add New Games
+          </a>
+        </li>
+      </ul>
+    </aside>
 
-<script>
-  function confirmDelete(gameId, publisherId) {
-    if (confirm('Yakin ingin menghapus game ini?')) {
-      // Buat form secara dinamis
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = `/publisher/deletegame/${publisherId}/${gameId}`;
-      
-      document.body.appendChild(form);
-      form.submit();
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Filters -->
+      <section class="store-filters">
+        <div class="filter-group">
+          <!-- Filter 1: “All Games (xx)” -->
+          <div class="dropdown-filter">
+            <button class="dropbtn" id="filter-button" onclick="toggleDropdown('filter-dropdown')">
+              All Games ({{ published_games|length }})
+            </button>
+            <div class="dropdown-content" id="filter-dropdown">
+              <a href="#" onclick="selectDropdownOption('filter-button', 'All Games ({{ published_games|length }})')">
+                All Games ({{ published_games|length }})
+              </a>
+              <a href="#" onclick="selectDropdownOption('filter-button', 'New Releases')">
+                New Releases
+              </a>
+              <a href="#" onclick="selectDropdownOption('filter-button', 'Top Rated')">
+                Top Rated
+              </a>
+            </div>
+          </div>
+
+          <!-- Filter 2: “SORT BY” -->
+          <div class="dropdown-sort">
+            <span>SORT BY</span>
+            <button class="dropbtn" id="sort-button" onclick="toggleDropdown('sort-dropdown')">
+              Alphabetical
+            </button>
+            <div class="dropdown-content" id="sort-dropdown">
+              <a href="#" onclick="selectDropdownOption('sort-button', 'Alphabetical A–Z')">
+                Alphabetical A–Z
+              </a>
+              <a href="#" onclick="selectDropdownOption('sort-button', 'Alphabetical Z–A')">
+                Alphabetical Z–A
+              </a>
+              <a href="#" onclick="selectDropdownOption('sort-button', 'Newest First')">
+                Newest First
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Published Game Cards Grid -->
+      <section class="store-grid">
+        {% for game in games %}
+        <div class="card"
+          onclick="showModal(`{{ game.name|escape }}`, `{{ game.image }}`, `{{ game.description|escape }}`, `{{ game.price }}`, `{{ game.publisher|escape }}`, `{{ game.id }}`)">
+          <img src="{{ game.image }}" alt="{{ game.name }}">
+          <div class="hover-title">{{ game.name }}</div>
+        </div>
+        {% endfor %}
+      </section>
+
+    </main>
+  </div>
+
+  <!-- dropdown & toggle script -->
+  <script>
+    function toggleDropdown(id) {
+      document.querySelectorAll('.dropdown-content').forEach(drop => {
+        if (drop.id !== id) {
+          drop.classList.remove('show');
+        }
+      });
+      document.getElementById(id).classList.toggle('show');
     }
-  }
-</script>
+
+    function selectDropdownOption(buttonId, value) {
+      document.getElementById(buttonId).innerText = value;
+      document.querySelectorAll('.dropdown-content').forEach(drop => drop.classList.remove('show'));
+    }
+
+    window.addEventListener('click', function (e) {
+      if (!e.target.matches('.dropbtn')) {
+        document.querySelectorAll('.dropdown-content').forEach(drop => {
+          drop.classList.remove('show');
+        });
+      }
+    });
+  </script>
 </body>
+
 </html>
