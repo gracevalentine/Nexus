@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cart | Nexus</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('gamer.static', filename='gamer_cart.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="logo">
+        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
+          >HOME</a
+        >
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" />
+        <button>🔍</button>
+      </div>
+      <nav>
+        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
+          >HOME</a
+        >
+        <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}"
+          >LIBRARY</a
+        >
+        <a href="{{ url_for('gamer.gamer_storepage', gamer_id=gamer_id) }}"
+          >STORE</a
+        >
+        <a href="{{ url_for('gamer.show_cart', gamer_id=gamer_id) }}">CART</a>
+        <a href="{{ url_for('auth.logout_controller') }}">LOGOUT</a>
+      </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+      <li class="flash {{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <main class="cart-container">
+      {% if cart_items %}
+      <form
+        action="{{ url_for('gamer.checkout', gamer_id=gamer_id) }}"
+        method="post"
+      >
+        {% for game in cart_items %}
+        <div class="cart-item card">
+          <input
+            type="checkbox"
+            name="selected_games"
+            value="{{ game.game_id }}"
+            checked
+          />
+          <img src="{{ game.cover_url }}" alt="{{ game.name }} Cover" />
+          <div class="cart-info">
+            <h2>{{ game.name }}</h2>
+            <p>{{ game.description }}</p>
+            <p><strong>Rp{{ "{:,.0f}".format(game.price) }}</strong></p>
+
+            <!-- ✅ Gunakan tombol tunggal dengan formaction -->
+            <button
+              type="submit"
+              formaction="{{ url_for('gamer.remove_from_cart', gamer_id=gamer_id, game_id=game.game_id) }}"
+              formmethod="post"
+            >
+              Hapus dari Cart
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+        <div style="text-align: center; margin-top: 20px">
+          <button type="submit" class="checkout-button">
+            🛒 Checkout yang Dipilih
+          </button>
+        </div>
+      </form>
+      {% else %}
+      <p class="empty-cart">Keranjang kamu kosong bro 😅</p>
+      {% endif %}
+    </main>
+  </body>
+</html>
