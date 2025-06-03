@@ -35,41 +35,52 @@ def login_controller():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+
         data = authentication_repository.get_account_by_email(email)
 
-        if data:
-            account_id, name, email, hashed_pw, role_str, status_str = data
-            role = Role[role_str]
-            status = AccountStatus[status_str]
+        if not data:
+            flash('Email tidak ditemukan.')
+            return redirect(url_for('auth.login_controller'))
 
-            if not authentication_repository.verify_password(password, hashed_pw):
-                flash('Email atau password salah.')
-                return redirect(url_for('auth.login_controller'))
+        account_id, name, email, hashed_pw, role_str, status_str = data
+        role = Role[role_str]
+        status = AccountStatus[status_str]
 
-            if status == AccountStatus.BANNED:
-                return render_template('login.html', error='Akun anda telah diblokir.')
+        if not authentication_repository.verify_password(password, hashed_pw):
+            flash('Email atau password salah.')
+            return redirect(url_for('auth.login_controller'))
 
-            session['account_id'] = account_id
-            session['username'] = name
-            session['role'] = role.name
+        if status == AccountStatus.BANNED:
+            return render_template('login.html', error='Akun anda telah diblokir.')
 
-            if role == Role.GAMER:
-                wallet = authentication_repository.get_gamer_wallet(account_id)
-                session['wallet'] = float(wallet)
-                flash('Berhasil login!')
-                return redirect(url_for('auth.gamer_homepage', gamer_id=account_id))  
+        # Set common session values
+        session['account_id'] = account_id
+        session['username'] = name
+        session['role'] = role.name
 
-            elif role == Role.ADMIN:
-                flash('Berhasil login sebagai admin!')
-                return render_template(f'{role.name.lower()}/auth.admin_view_gamer.html', username=name, role=role.name)
+        # Role-based session and redirect
+        if role == Role.GAMER:
+            wallet = authentication_repository.get_gamer_wallet(account_id)
+            session['wallet'] = float(wallet)
+            session['gamer_id'] = account_id
+            flash('Berhasil login sebagai gamer!')
+            return redirect(url_for('auth.gamer_homepage', gamer_id=account_id))
 
-            elif role == Role.PUBLISHER:
-                flash('Berhasil login sebagai publisher!')
-                return render_template(f'{role.name.lower()}/publisher_homepage.html', username=name, role=role.name)
+        elif role == Role.ADMIN:
+            session['admin_id'] = account_id
+            flash('Berhasil login sebagai admin!')
+            return redirect(url_for('auth.admin_homepage', admin_id=account_id))
 
-        flash('Email tidak ditemukan.')
-        return redirect(url_for('auth.login_controller'))
+        elif role == Role.PUBLISHER:
+            session['publisher_id'] = account_id
+            flash('Berhasil login sebagai publisher!')
+            return render_template('publisher/publisher_homepage.html', username=name, role=role.name)
 
+        else:
+            flash('Role tidak dikenali.')
+            return redirect(url_for('auth.login_controller'))
+
+    # GET method
     return render_template('login.html')
 
 def logout_controller():

@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, session, url_for
 from authentication.controller import authentication_controller
 
 account_bp = Blueprint(
-    'auth',  # penting! untuk url_for()
+    'auth', 
     __name__,
     template_folder='../view',
     static_folder='../view',
@@ -25,5 +25,5 @@ def gamer_homepage(gamer_id):
 def admin_homepage(admin_id):
     if 'username' not in session:
         return redirect(url_for('auth.login_controller'))
-    return render_template('admin_view_gamer.html', admin_id=admin_id, username=session.get('username', 'Admin'))
+    return render_template('admin_homepage.html', admin_id=admin_id, username=session.get('username', 'Admin'))
 

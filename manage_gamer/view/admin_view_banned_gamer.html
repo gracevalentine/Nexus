@@ -5,21 +5,21 @@
     <title>Admin View Banned Gamer</title>
 
     <!-- Link ke CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin_home_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='manage_gamer.css') }}">
 </head>
 <body>
 
     <!-- Navbar opsional -->
     <div class="navbar">
         <h1>Admin Panel</h1>
-        <form method="GET" action="{{ url_for('admin.search_user') }}" class="search-box">
+        <form method="GET" action="{{ url_for('admin.search_user_controller') }}" class="search-box">
       <input type="hidden" name="admin_id" value="{{ admin_id }}">
       <input type="text" name="username" placeholder="Type the user's name" />
       <button type="submit">🔍</button>
     </form>
   </div>
 
-  <a class="logout" href="{{ url_for('logout') }}" style="position: fixed; top: 20px; right: 30px;">Logout</a>
+  <a class="logout" href="{{ url_for('auth.logout_controller') }}" style="position: fixed; top: 20px; right: 30px;">Logout</a>
 
     <div class="dashboard-container">
         <!-- Sidebar -->
@@ -49,7 +49,7 @@
                             <td>{{ gamer.ban_reason }}</td> <!-- Tampilkan alasan banned -->
                             <td>
                                 {% if gamer.status != 'UNBANNED' %}
-                                    <a href="{{ url_for('admin.unban_gamer', gamer_id=gamer.id, admin_id=admin_id) }}">Unbanned</a>
+                                    <a href="{{ url_for('admin.unban_gamer_controller', gamer_id=gamer.id, admin_id=admin_id) }}">Unbanned</a>
                                 {% endif %}
                             </td>
                         </tr>
