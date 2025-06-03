@@ -1,66 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='publisher_new_game.css') }}">
-    <title>{% if is_edit %}Edit Game{% else %}Add New Game{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publisher – Add New Games</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='publisher_new_game.css') }}" />
 </head>
+
 <body>
+    <!-- Top Navbar -->
     <header>
         <div class="logo">
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Nexus</a>
-
+            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">&lt;logo_pic&gt;</a>
+            <span class="page-title">Add New Games</span>
         </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Search">
-            <button>🔍</button>
-        </div>
-        <nav>
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}" class="active">HOME</a>
-            <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">MY GAMES</a>
-            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">NEW GAME</a>
+        <nav class="top-nav">
+            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">HOME</a>
             <a href="{{ url_for('logout') }}">LOGOUT</a>
         </nav>
     </header>
+
     <div class="container">
-        <div class="sidebar">
-            <h2>My Games</h2>
-            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">Add New Game</a>
-        </div>
-        <div class="main-content">
-            <h1>{% if is_edit %}Edit Game{% else %}Add New Game{% endif %}</h1>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul>
+                <li>
+                    <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">
+                        My Games
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}" class="active">
+                        Add New Games
+                    </a>
+                </li>
+            </ul>
+        </aside>
 
-            {% if is_edit and game.image_data %}
-            <div class="game-image">
-                <img src="data:image/jpeg;base64,{{ game.image_data }}" alt="Current Game Image" style="max-width: 200px;">
-            </div>
-            {% endif %}
+        <!-- Main Content -->
+        <main class="main-content">
+            <form action="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}" method="POST"
+                enctype="multipart/form-data" class="new-game-form">
+                <!-- Image Upload Container -->
+                <div class="image-upload-container" onclick="triggerFileInput()">
+                    <input type="file" id="game-image-input" name="game_image" accept="image/*"
+                        onchange="previewImage(event)" hidden />
+                    <div id="image-placeholder">
+                        <span>Click to choose cover image</span>
+                    </div>
+                    <img id="image-preview" src="" alt="Game Cover Preview" />
+                </div>
 
-            <form method="POST" action="{{ form_action }}" enctype="multipart/form-data">
-                <label for="game-name">Game Name</label>
-                <input type="text" id="game-name" name="game-name" value="{{ game.game_name if is_edit else '' }}" required>
+                <!-- Game Details Fields -->
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="game-name">GAME NAME</label>
+                        <input type="text" id="game-name" name="game_name" placeholder="Enter game name" required />
+                    </div>
 
-                <label for="price-game">Price (Rp)</label>
-                <input type="text" id="price-game" name="price-game" value="{{ game.game_price if is_edit else '' }}" required>
+                    <div class="form-group">
+                        <label for="game-price">PRICE GAME</label>
+                        <input type="text" id="game-price" name="game_price" placeholder="Enter price (e.g. 160.000)"
+                            required />
+                    </div>
 
-                <label for="genre">Genre</label>
-                <select id="genre" name="genre" required>
-                    <option value="">Select Genre</option>
-                    {% for genre in ['Action', 'Action-Adventure', 'Adventure', 'Casual', 'Racing', 'Sports', 'Horror'] %}
-                    <option value="{{ genre }}" {% if is_edit and game.game_genre == genre %}selected{% endif %}>{{ genre }}</option>
-                    {% endfor %}
-                </select>
+                    <div class="form-group">
+                        <label for="game-genre">GENRE</label>
+                        <select id="game-genre" name="game_genre" required>
+                            <option value="" disabled selected>Select genre</option>
+                            <option value="Action">Action</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Racing">Racing</option>
+                            <option value="RPG">RPG</option>
+                            <option value="Shooter">Shooter</option>
+                            <option value="Simulation">Simulation</option>
+                            <option value="Strategy">Strategy</option>
+                            <!-- Tambahkan genre lain sesuai kebutuhan -->
+                        </select>
+                    </div>
 
-                <label for="description">Description</label>
-                <textarea id="description" name="description" required>{{ game.game_desc if is_edit else '' }}</textarea>
+                    <div class="form-group">
+                        <label for="game-description">DESCRIPTION</label>
+                        <textarea id="game-description" name="game_description" placeholder="Enter game description"
+                            rows="4" required></textarea>
+                    </div>
 
-                <label for="image">Game Image</label>
-                <input type="file" name="image" accept="image/*">
-
-                <button type="submit">{% if is_edit %}Update{% else %}Add{% endif %}</button>
+                    <div class="form-group">
+                        <button type="submit" class="add-button">Add</button>
+                    </div>
+                </div>
             </form>
-        </div>
+        </main>
     </div>
+
+    <script>
+        function triggerFileInput() {
+            document.getElementById('game-image-input').click();
+        }
+
+        function previewImage(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('image-preview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('image-placeholder').style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
+
 </html>
