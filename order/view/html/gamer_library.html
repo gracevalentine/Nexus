@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cart | Nexus</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('gamer.static', filename='gamer_library.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="logo">
+        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
+          >NEXUS</a
+        >
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" />
+        <button>🔍</button>
+      </div>
+      <nav>
+        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
+          >HOME</a
+        >
+        <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}" class="active"
+          >LIBRARY</a
+        >
+        <a href="{{ url_for('gamer.gamer_storepage', gamer_id=gamer_id) }}">STORE</a>
+        <a
+          href="{{ url_for('gamer.show_cart', gamer_id=gamer_id) }}"
+          >CART</a
+        >
+        <a href="{{ url_for('auth.logout_controller') }}">LOGOUT</a>
+      </nav>
+    </header>
+<!-- Game Library Section -->
+    <section class="library">
+      <div id="products">
+        {% for game in games %}
+        <div class="card">
+          <img src="{{ game.image }}" alt="{{ game.name }}" />
+          <div class="info">
+            <h3>{{ game.name }}</h3>
+            <p>Genre: {{ game.genre }}</p>
+            <!-- <p>Release: {{ game.release_year }}</p> -->
+            <button onclick="uninstallGame('{{ game.id }}')">Uninstall</button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    <script>
+      function uninstallGame(gameId) {
+        const yakin = confirm("Yakin ingin menghapus game ini dari library?");
+        if (!yakin) return;
+
+        fetch(`/gamer/uninstall/{{ gamer_id }}/${gameId}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("Game berhasil dihapus dari library.");
+              location.reload();
+            } else {
+              alert("Gagal uninstall: " + data.message);
+            }
+          })
+          .catch((err) => {
+            alert("Terjadi kesalahan: " + err);
+          });
+      }
+    </script>
+  </body>
+</html>
