@@ -8,12 +8,10 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 
 app = Flask(__name__)
 
-
 app.jinja_loader = ChoiceLoader([
     FileSystemLoader('view'),
     FileSystemLoader('manage_gamer/view'),
-    FileSystemLoader('order/view/html'),
-    FileSystemLoader('authentication/view/html')
+    FileSystemLoader('order/view/html')
 ])
 
 app.secret_key = 'secretkey123'
