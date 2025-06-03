@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus - Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='home_page.css') }}">
+    <link rel="stylesheet" href="{{ url_for('auth.static', filename='gamer_homepage.css') }}">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+            <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
 
         </div>
         <!-- <div class="search-bar">
@@ -19,19 +19,14 @@
             <button>🔍</button>
         </div> -->
         <nav>
-            <a href="{{ url_for('gamer.gamer_homepage', gamer_id=gamer_id) }}" class="active">HOME</a>
-            <a href="{{ url_for('gamer.gamer_library', gamer_id=gamer_id) }}">LIBRARY</a>
-            <a href="{{ url_for('gamer.gamer_storepage', gamer_id=gamer_id) }}">STORE</a>
-            <a href="{{ url_for('gamer.wallet_page', gamer_id=gamer_id) }}">WALLET</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
+            <a href="{{  url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="active">HOME</a>
         </nav>
     </header>
 
     <!-- <div class="wallet-widget" onclick="toggleWalletPopup()">
 💰 Rp {{ wallet_balance }}
     </div> -->
-    <a href="{{ url_for('gamer.wallet_page', gamer_id=gamer_id) }}" class="wallet-widget">
-    💰 Rp {{ wallet_balance }}</a>
+    
     <section class="hero">
         <div class="hero-content">
             <h1>New Collection</h1>
