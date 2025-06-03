@@ -6,157 +6,104 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #000;
-    color: white;
+    background-color: #111;
+    color: #fff;
 }
 
 header {
-    background-color: #111;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    background-color: #1e1e1e;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .logo a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
+    color: #fff;
     font-size: 1.5rem;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.logo a:hover {
-    color: #1e90ff;
-    transform: scale(1.1);
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .search-bar {
-    flex: 1;
-    max-width: 400px;
-    margin: 0 20px;
     display: flex;
-    border: 1px solid #555;
-    border-radius: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-}
-
-.search-bar:hover {
-    box-shadow: 0 0 10px #1e90ff;
+    align-items: center;
 }
 
 .search-bar input {
-    padding: 10px;
-    flex: 1;
+    padding: 0.5rem;
     border: none;
+    border-radius: 5px 0 0 5px;
     outline: none;
-    background: #000;
-    color: white;
 }
 
 .search-bar button {
-    background-color: #333;
-    color: white;
+    padding: 0.5rem;
     border: none;
-    padding: 10px 15px;
+    background-color: #444;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
     cursor: pointer;
 }
 
-nav {
-    display: flex;
-    gap: 20px;
-}
-
 nav a {
-    color: white;
+    color: #fff;
+    margin-left: 1.5rem;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.3s;
 }
 
-nav a:hover,
-nav a.active {
-    color: #1e90ff;
-    transform: scale(1.1);
+nav a.active,
+nav a:hover {
+    color: #1db954;
 }
 
 .hero {
-    background: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react//heroes/ogre_magi.png') no-repeat center center/cover;
-    height: 90vh;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out;
     display: flex;
     align-items: center;
-    padding: 40px;
-    color: white;
+    justify-content: center;
+    padding: 2rem;
 }
 
 .hero-content {
-    max-width: 500px;
     background-color: rgba(0, 0, 0, 0.6);
-    padding: 20px;
-    border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hero-content:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 800px;
 }
 
 .hero-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
 }
 
 .hero-content em {
     font-size: 1.2rem;
+    color: #ccc;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
 }
 
 .hero-content p {
-    font-size: 0.95rem;
     line-height: 1.6;
+    font-size: 1rem;
 }
 
 .hero-logo {
-    margin-top: 30px;
+    margin-top: 2rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .hero-logo img {
-    width: 60px;
-}
-
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    nav {
-        margin-top: 10px;
-        flex-wrap: wrap;
-    }
-
-    .hero {
-        flex-direction: column;
-        height: auto;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .hero-content {
-        max-width: 100%;
-        padding: 15px;
-    }
-
-    .hero-logo {
-        justify-content: center;
-    }
+    height: 50px;
 }

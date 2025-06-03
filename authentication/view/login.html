@@ -1,51 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Nexus</title>
-  <link rel="stylesheet" href="{{ url_for('auth.static', filename='login.css') }}">
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('auth.static', filename='login.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
-
 <body>
-  <img src="{{ url_for('auth.static', filename='bglogin.jpeg') }}" alt="background" class="background-image">
-  <div class="navbar">
-    <h1>Nexus</h1>
-  </div>
+    <img src="{{ url_for('auth.static', filename='bglogin.jpeg') }}" alt="background" class="background-image">
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <script>
-        alert("{{ messages[0] }}");
-      </script>
-    {% endif %}
-  {% endwith %}
+    <div class="container">
+        <h1>Login</h1>
+        <p>Belum punya akun? <a href="{{ url_for('auth.register_controller') }}">Daftar di sini</a></p>
 
-  <div class="login-container">
-    <div class="login-box">
-      <h2>Login</h2>
-      <p>
-        Please <a href="{{ url_for('auth.register_controller') }}">Sign-up</a> if you don't have an account.
-      </p>
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <p class="success-message">{{ messages[0] }}</p>
+            {% endif %}
+        {% endwith %}
 
-      {% if error %}
-        <p class="error" style="color: red;">{{ error }}</p>
-      {% endif %}
+        <form method="POST" action="{{ url_for('auth.login_controller') }}" novalidate>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Masukkan username" required autocomplete="username" />
 
-      <form action="{{ url_for('auth.login_controller') }}" method="POST">
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="hello@reallygreatsite.com" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-        </div>
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="current-password" />
+                <button type="button" class="toggle-password" aria-label="Tampilkan password">👁️</button>
+            </div>
+
+            <button class="signup-btn" type="submit">Login</button>
+        </form>
     </div>
-  </div>
-</body>
 
+    <script>
+        const togglePassword = document.querySelector('.toggle-password');
+        const passwordInput = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    </script>
+</body>
 </html>
