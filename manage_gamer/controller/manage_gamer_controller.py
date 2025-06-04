@@ -74,3 +74,12 @@ def search_banned_user_controller():
 
     gamers = manage_gamer_repository.search_banned_gamers(username)
     return render_template('admin_view_banned_gamer.html', admin_id=admin_id, gamers=gamers)
+
+# kembali ke admin homepage
+@admin_bp.route('/admin_homepage/<int:admin_id>')
+def admin_homepage_controller(admin_id):
+    admin_id = session.get('admin_id')
+    if not admin_id or not manage_gamer_repository.check_is_admin(admin_id):
+        print(f"[LOG] admin_id from session: {admin_id}")
+        abort(403)
+    return render_template('admin_homepage.html', admin_id=admin_id, username=session.get('username', 'Admin'))

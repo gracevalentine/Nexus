@@ -24,9 +24,9 @@ app.register_blueprint(gamer_bp, url_prefix='/gamer')
 def home():
     return redirect(url_for('auth.login_controller'))
 
-@app.route('/gamer-list')
-def gamer_list():
-    return render_template('admin_view_gamer.html')
+@app.route('/admin_homepage_route')
+def admin_homepage_route():
+    return render_template('admin_homepage.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

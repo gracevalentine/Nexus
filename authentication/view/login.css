@@ -42,7 +42,7 @@ h1 {
     margin-bottom: 20px;
     font-weight: 600;
     font-size: 2.3rem;
-    color: #66ccff;
+    color: #7f5c57;
 }
 
 p {
@@ -54,7 +54,7 @@ p {
 }
 
 a {
-    color: #66ccff;
+    color: #7f5c57;
     text-decoration: none;
     font-weight: 500;
 }
@@ -86,8 +86,8 @@ input {
 
 input:focus {
     outline: none;
-    border-color: #66ccff;
-    box-shadow: 0 0 8px #66ccffaa;
+    border-color: #7f5c57;
+    box-shadow: 0 0 8px #7f5c57;
 }
 
 .password-wrapper {
@@ -101,7 +101,7 @@ input:focus {
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: #66ccff;
+    color: #7f5c57;
     font-size: 1.2rem;
     cursor: pointer;
     user-select: none;
@@ -109,25 +109,25 @@ input:focus {
 }
 
 .toggle-password:hover {
-    color: #a0d8ff;
+    color: #4b3531;
 }
 
 .signup-btn {
     width: 100%;
     margin-top: 30px;
     padding: 15px;
-    background-color: #66ccff;
+    background-color: #7f5c57;
     color: #000;
     font-weight: 700;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 6px 12px #66ccff88;
+    box-shadow: 0 6px 12px #4b3531;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .signup-btn:hover {
-    background-color: #4bb0ff;
+    background-color: #7f5c57;
     transform: scale(1.05);
 }
 

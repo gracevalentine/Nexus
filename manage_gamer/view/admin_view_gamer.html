@@ -11,16 +11,13 @@
 
   <!-- Header container untuk judul + search bar -->
   <div class="navbar">
-    <h1>Admin Panel</h1>
+    <a class="admin-title" href="{{ url_for('admin_homepage_route') }}">Admin Panel</a>
     <form method="GET" action="{{ url_for('admin.search_user_controller') }}" class="search-box">
       <input type="hidden" name="admin_id" value="{{ admin_id }}">
       <input type="text" name="username" placeholder="Type the user's name" />
       <button type="submit">🔍</button>
     </form>
   </div>
-
-  <!-- Logout tetap di kanan atas, kamu bisa buat fixed position jika perlu -->
-  <a class="logout" href="{{ url_for('auth.logout_controller') }}" style="position: fixed; top: 20px; right: 30px;">Logout</a>
 
   <div class="dashboard-container">
     <!-- Sidebar -->

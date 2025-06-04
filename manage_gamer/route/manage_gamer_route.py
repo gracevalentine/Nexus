@@ -15,5 +15,6 @@ admin_bp.route('/searchUser')(manage_gamer_controller.search_user_controller)
 admin_bp.route('/searchBannedUser')(manage_gamer_controller.search_banned_user_controller)
 admin_bp.route('/viewGamer')(manage_gamer_controller.admin_view_gamer_controller)
 admin_bp.route('/viewBannedGamer')(manage_gamer_controller.admin_view_banned_gamer_controller)
+admin_bp.route('/admin_homepage/<int:admin_id>')(manage_gamer_controller.admin_homepage_controller)
 
 

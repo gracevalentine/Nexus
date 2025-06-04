@@ -39,7 +39,7 @@ def login_controller():
         data = authentication_repository.get_account_by_email(email)
 
         if not data:
-            flash('Email tidak ditemukan.')
+            flash('Email tidak ditemukan.', 'error')
             return redirect(url_for('auth.login_controller'))
 
         account_id, name, email, hashed_pw, role_str, status_str = data
@@ -47,41 +47,40 @@ def login_controller():
         status = AccountStatus[status_str]
 
         if not authentication_repository.verify_password(password, hashed_pw):
-            flash('Email atau password salah.')
+            flash('Email atau password salah.', 'error')
             return redirect(url_for('auth.login_controller'))
 
         if status == AccountStatus.BANNED:
             return render_template('login.html', error='Akun anda telah diblokir.')
 
-        # Set common session values
+        # Set session
         session['account_id'] = account_id
         session['username'] = name
         session['role'] = role.name
 
-        # Role-based session and redirect
         if role == Role.GAMER:
             wallet = authentication_repository.get_gamer_wallet(account_id)
             session['wallet'] = float(wallet)
             session['gamer_id'] = account_id
-            flash('Berhasil login sebagai gamer!')
+            flash('Berhasil login sebagai gamer!', 'success')
             return redirect(url_for('auth.gamer_homepage', gamer_id=account_id))
 
         elif role == Role.ADMIN:
             session['admin_id'] = account_id
-            flash('Berhasil login sebagai admin!')
+            flash('Berhasil login sebagai admin!', 'success')
             return redirect(url_for('auth.admin_homepage', admin_id=account_id))
 
         elif role == Role.PUBLISHER:
             session['publisher_id'] = account_id
-            flash('Berhasil login sebagai publisher!')
+            flash('Berhasil login sebagai publisher!', 'success')
             return render_template('publisher/publisher_homepage.html', username=name, role=role.name)
 
         else:
-            flash('Role tidak dikenali.')
+            flash('Role tidak dikenali.', 'error')
             return redirect(url_for('auth.login_controller'))
 
     # GET method
-    return render_template('login.html')
+    return render_template('login.html', error=None)
 
 def logout_controller():
     session.clear()
