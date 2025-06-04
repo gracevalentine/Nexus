@@ -2,29 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nexus - Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='publisher_homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('view.static', filename='publisher_homepage.css') }}">
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">Home</a>
+            <a href="{{ url_for('view.publisher_homepage', publisher_id=publisher_id) }}">NEXUS</a>
+        </div>
 
-        </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Search">
-            <button>🔍</button>
-        </div>
         <nav>
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}" class="active">HOME</a>
-            <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">MY GAMES</a>
-            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}">NEW GAME</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
+            <a href="{{ url_for('view.publisher_homepage', publisher_id=publisher_id) }}" class="active">HOME</a>
         </nav>
     </header>
+
     <section class="hero">
         <div class="hero-content">
             <h1>New Collection</h1>
@@ -39,9 +33,43 @@
                 to read.
             </p>
             <div class="hero-logo">
-                <img src="https://upload.wikimedia.org/wikipedia/en/7/7f/Dota_2_logo.svg" alt="DOTA 2">
+                <img src="https://upload.wikimedia.org/wikipedia/en/7/7f/Dota_2_logo.svg" alt="DOTA 2" />
                 <span style="font-size: 2rem; font-weight: bold;">DOTA 2</span>
             </div>
         </div>
     </section>
+
+    <script>
+        window.addEventListener("click", function (e) {
+            const popup = document.getElementById("walletPopup");
+            const widget = document.querySelector(".wallet-widget");
+            if (popup && widget && !popup.contains(e.target) && !widget.contains(e.target)) {
+                popup.style.display = "none";
+            }
+        });
+    </script>
+
+    <script>
+    const images = [
+        "{{ url_for('view.static', filename='images/bg1.jpg') }}",
+        "{{ url_for('view.static', filename='images/bg2.jpg') }}",
+        "{{ url_for('view.static', filename='images/bg3.jpg') }}",
+        "{{ url_for('view.static', filename='images/bg4.jpg') }}"
+    ];
+
+    let heroSection = document.querySelector('.hero');
+
+    // Set random image on page load
+    let currentIndex = Math.floor(Math.random() * images.length);
+    heroSection.style.backgroundImage = `url('${images[currentIndex]}')`;
+
+    // Ganti setiap 30 detik
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % images.length;
+        heroSection.style.backgroundImage = `url('${images[currentIndex]}')`;
+    }, 30000);
+</script>
+
 </body>
+
+</html>
