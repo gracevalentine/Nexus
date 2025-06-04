@@ -12,5 +12,5 @@ account_bp = Blueprint(
 account_bp.route('/register', methods=['GET', 'POST'])(authentication_controller.register_controller)
 account_bp.route('/login', methods=['GET', 'POST'])(authentication_controller.login_controller)
 account_bp.route('/logout')(authentication_controller.logout_controller)
-account_bp.route('/gamer_homepage')(authentication_controller.gamer_homepage)
+account_bp.route('/gamer_homepage/<int:gamer_id>')(authentication_controller.gamer_homepage)
 account_bp.route('/admin_homepage/<int:admin_id>')(authentication_controller.admin_homepage)

@@ -28,5 +28,13 @@ def home():
 def admin_homepage_route():
     return render_template('admin_homepage.html')
 
+@app.route('/publisher_homepage_route')
+def publisher_homepage_route():
+    return render_template('publisher_homepage.html')
+
+@app.route('/gamer_homepage_route')
+def gamer_homepage_route():
+    return render_template('gamer_homepage.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

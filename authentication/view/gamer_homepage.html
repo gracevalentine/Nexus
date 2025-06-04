@@ -19,6 +19,7 @@
         </div> -->
         <nav>
             <a href="{{  url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="active">HOME</a>
+            <a href="{{  url_for('gamer.storepage', gamer_id=gamer_id) }}">STORE</a>
         </nav>
     </header>
 
@@ -48,10 +49,10 @@
 
     <script>
         const images = [
-            "{{ url_for('view.static', filename='images/bg1.jpg') }}",
-            "{{ url_for('view.static', filename='images/bg2.jpg') }}",
-            "{{ url_for('view.static', filename='images/bg3.jpg') }}",
-            "{{ url_for('view.static', filename='images/bg4.jpg') }}"
+            "{{ url_for('static', filename='images/bg1.jpg') }}",
+            "{{ url_for('static', filename='images/bg2.jpg') }}",
+            "{{ url_for('static', filename='images/bg3.jpg') }}",
+            "{{ url_for('static', filename='images/bg4.jpg') }}"
         ];
 
         let heroSection = document.querySelector('.hero');
