@@ -1,9 +1,12 @@
-from flask import render_template, request, jsonify, flash, redirect, url_for
+from flask import render_template, request, jsonify, flash, redirect, session, url_for
 from organize_game.model.Game import Game
 from store.repo import store_repository
 import base64
 
 def storepage(gamer_id):
+    if 'username' not in session:
+        return redirect(url_for('auth.login_controller'))
+    
     rows = store_repository.get_all_games()  # pake method baru ambil semua game
 
     games = []
