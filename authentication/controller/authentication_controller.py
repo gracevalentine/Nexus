@@ -73,13 +73,12 @@ def login_controller():
             elif account.role == Role.PUBLISHER:
                 session['publisher_id'] = account.id
                 flash('Berhasil login sebagai publisher!', 'success')
-                return render_template('publisher/publisher_homepage.html', username=account.name, role=account.role.name)
+                return redirect(url_for('auth.publisher_homepage', publisher_id=account.id))
 
         flash('Email tidak ditemukan atau password salah.', 'error')
         return redirect(url_for('auth.login_controller'))
 
     return render_template('login.html', error=None)
-
 
 # ----------- GAMER HOMEPAGE -----------
 def gamer_homepage(gamer_id):
@@ -91,7 +90,6 @@ def gamer_homepage(gamer_id):
     username = session.get('username', 'Guest')
     return render_template('gamer_homepage.html', gamer_id=gamer_id, wallet_balance=wallet, username=username)
 
-
 # ----------- ADMIN HOMEPAGE -----------
 def admin_homepage(admin_id):
     if 'username' not in session or session.get('role') != 'ADMIN':
@@ -100,6 +98,13 @@ def admin_homepage(admin_id):
 
     return render_template('admin_homepage.html', admin_id=admin_id, username=session.get('username', 'Admin'))
 
+# ----------- PUBLISHER HOMEPAGE -----------
+def publisher_homepage(publisher_id):
+    if 'username' not in session or session.get('role') != 'PUBLISHER':
+        flash('Harap login terlebih dahulu.', 'error')
+        return redirect(url_for('auth.login_controller'))
+
+    return render_template('publisher_homepage.html', publisher_id=publisher_id, username=session.get('username', 'Publisher'))
 
 # ----------- LOGOUT -----------
 def logout_controller():
