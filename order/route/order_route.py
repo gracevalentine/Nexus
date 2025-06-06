@@ -2,10 +2,10 @@ from flask import Blueprint, request, flash, redirect, url_for
 from order.controller.order_controller import GamerController
 
 gamer_bp = Blueprint(
-    'ahhaa',
+    'gamer',
     __name__,
-    template_folder='../view/html',   # path relatif dari order/route ke template
-    static_folder='../view/css',      # path relatif ke folder CSS
+    template_folder='../view',   # path relatif dari order/route ke template
+    static_folder='../view',      # path relatif ke folder CSS
     static_url_path='/gamer_static'   # URL prefix untuk akses CSS
 )
 
