@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
 # from flask import Blueprint, render_template, request, redirect, url_for
-from model.Gamer import Gamer
+from authentication.model.Gamer import Gamer
 from model.Cart import Cart
 from model.Game import Game
 from controller.db_controller import get_db_connection 

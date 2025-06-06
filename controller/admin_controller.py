@@ -2,7 +2,7 @@ from flask import Blueprint, abort, render_template, request, redirect, url_for
 from model.Account import Account
 from model.AccountStatus import AccountStatus
 from model.Role import Role
-from model.Gamer import Gamer
+from authentication.model.Gamer import Gamer
 from controller.db_controller import get_db_connection
 from flask import redirect, url_for
 

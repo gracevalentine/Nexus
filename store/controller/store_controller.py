@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify, flash, redirect, session, url_for
-from organize_game.model.Game import Game
+from organize_games.model.Game import Game
 from store.repo import store_repository
 import base64
 
