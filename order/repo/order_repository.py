@@ -253,8 +253,9 @@ def get_selected_games(game_ids):
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
-    return rows
 
+    # Convert to list of dicts
+    return [{"game_id": row[0], "game_price": row[1]} for row in rows]
 
 def get_owned_games(gamer_id, game_ids):
     conn = get_db_connection()
