@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nexus - Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=M+PLUS+1p&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="{{ url_for('gamer.static', filename='gamer_stores.css') }}"
@@ -11,26 +13,24 @@
   </head>
   <body>
     <!-- Navbar -->
-    <header>
-      <div class="logo">
-        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
-          >HOME</a
-        >
-      </div>
+    <header class="navbar">
+        <div class="navbar-left">
+            <div class="logo">
+                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+            </div>
+        </div>
       <div class="search-bar">
         <input type="text" placeholder="Search" />
         <button>🔍</button>
       </div>
-      <nav>
-        <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}"
-          >HOME</a
-        >
-        >
-        <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="active"
-          >STORE</a
-        >
-        <a href="{{ url_for('auth.logout_controller') }}">LOGOUT</a>
-      </nav>
+        <nav class="navbar-links">
+            <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="nav-link">HOME</a>
+            <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
+            <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link">STORE</a>
+            <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link">CART</a>
+            <a href="{{ url_for('wallet.walletpage', gamer_id=gamer_id) }}" class="nav-link active">WALLET</a>
+            <a href="{{ url_for('auth.logout_controller') }}" class="nav-link">LOGOUT</a>
+        </nav>
     </header>
 
     <!-- Filters -->
@@ -179,7 +179,7 @@
       function confirmBuy() {
         if (!confirm("Apakah kamu yakin ingin membeli game ini?")) return;
 
-        fetch(`/gamer/buy/${selectedGamerId}/${selectedGameId}`, {
+        fetch(`/order/buy/${selectedGamerId}/${selectedGameId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
         })
@@ -196,7 +196,7 @@
       }
 
       function addToCart() {
-        fetch(`/gamer/cart/add/${selectedGamerId}/${selectedGameId}`, {
+        fetch(`/order/cart/add/${selectedGamerId}/${selectedGameId}`, {
           method: "POST",
         })
           .then((res) => res.json())
@@ -214,7 +214,7 @@
         const reviewText = document.getElementById("review-input").value.trim();
         if (!reviewText) return alert("Review tidak boleh kosong!");
 
-        fetch(`/gamer/review/${selectedGamerId}/${selectedGameId}`, {
+        fetch(`/order/review/add/${selectedGamerId}/${selectedGameId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ review: reviewText }),
@@ -233,7 +233,7 @@
       }
 
       function loadReviews() {
-        fetch(`/gamer/review/list/${selectedGameId}`)
+        fetch(`/order/review/list/${selectedGameId}`)
           .then((res) => res.json())
           .then((data) => {
             console.log("REVIEW JSON:", data); // Debug log

@@ -1,12 +1,16 @@
-from tkinter import Image
+# from tkinter import Image
 from flask import render_template, request, redirect, session, url_for, flash
-# from PIL import Image
+from PIL import Image
 import base64
 import io
-from organize_games.repo import games_repository
+from organize_game.repo import organize_game_repository
+
+def publisher_homepage(publisher_id):
+    publisher_id = session.get('publisher_id')
+    return render_template('publisher_homepage.html', publisher_id=publisher_id, username=session.get('username', 'Publisher'))
 
 def published_games(publisher_id):
-    games = games_repository.get_games_by_publisher(publisher_id)
+    games = organize_game_repository.get_games_by_publisher(publisher_id)
     for game in games:
         if game['game_image']:
             game['image_data'] = base64.b64encode(game['game_image']).decode('utf-8')
@@ -30,7 +34,7 @@ def add_new_game(publisher_id):
             img.save(buffer, format='JPEG', quality=85)
             image_data = buffer.getvalue()
 
-        games_repository.insert_game((game_name, description, genre, price, image_data, publisher_id))
+        organize_game_repository.insert_game((game_name, description, genre, price, image_data, publisher_id))
         flash('Game successfully added!')
         return redirect(url_for('published_games', publisher_id=publisher_id))
 
@@ -46,13 +50,13 @@ def edit_game(publisher_id, game_id):
 
         if image_file and image_file.filename != '':
             image_data = image_file.read()
-            games_repository.update_game(game_id, publisher_id, (name, price, genre, desc, image_data), with_image=True)
+            organize_game_repository.update_game(game_id, publisher_id, (name, price, genre, desc, image_data), with_image=True)
         else:
-            games_repository.update_game(game_id, publisher_id, (name, price, genre, desc), with_image=False)
+            organize_game_repository.update_game(game_id, publisher_id, (name, price, genre, desc), with_image=False)
 
         return redirect(url_for('published_games', publisher_id=publisher_id))
 
-    game = games_repository.get_game_by_id(game_id, publisher_id)
+    game = organize_game_repository.get_game_by_id(game_id, publisher_id)
     if game and game['game_image']:
         game['image_data'] = base64.b64encode(game['game_image']).decode('utf-8')
 
@@ -62,10 +66,7 @@ def edit_game(publisher_id, game_id):
                            game=game,
                            publisher_id=publisher_id)
 
-def delete_game_controller(publisher_id, game_id):
-    games_repository.delete_game(game_id, publisher_id)
+def delete_game(publisher_id, game_id):
+    organize_game_repository.delete_game(game_id, publisher_id)
     return redirect(url_for('published_games', publisher_id=publisher_id))
 
-def publisher_homepage_controller(publisher_id):
-    publisher_id = session.get('publisher_id')
-    return render_template('publisher_homepage.html', publisher_id=publisher_id, username=session.get('username', 'Publisher'))

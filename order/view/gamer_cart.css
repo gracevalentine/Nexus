@@ -1,37 +1,73 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #121212;
-  color: #f0f0f0;
-  margin: 0;
-  padding: 0;
+    background-color: #000;
+    color: white;
+}
+
+/* Logo dan Header */
+.logo a {
+    font-family: 'Orbitron', sans-serif;
+    text-decoration: none;
+    color: #1e90ff;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.logo a:hover {
+    color: #00ffc8;
+    transform: scale(1.1);
+    text-shadow: 0 0 10px #00ffc8;
+}
+
+nav a {
+    font-family: 'Orbitron', sans-serif;
 }
 
 .navbar {
+  width: 100%;
+  padding: 16px 32px;
+  background-color: #121212;
+  color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #1f1f1f;
-  padding: 1rem 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.navbar .logo a {
-  color: #00fff7;
-  font-size: 1.5rem;
-  text-decoration: none;
+.logo a {
+  font-size: 24px;
   font-weight: bold;
-}
-
-.navbar nav a {
-  margin-left: 20px;
-  color: #ccc;
+  color: #ffffff;
   text-decoration: none;
+  letter-spacing: 1px;
 }
 
-.navbar nav a.active {
-  color: #00fff7;
-  font-weight: bold;
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  margin-right: 2px; /* Tambah jarak ke tepi kanan */
 }
 
+.nav-link {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
 .cart-container {
   max-width: 1000px;
   margin: 2rem auto;
@@ -39,6 +75,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  font-family: Chakra Petch, sans-serif;
 }
 
 .cart-item {

@@ -5,38 +5,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Publisher – Add New Games</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='publisher_new_game.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('publisher.static', filename='publisher_new_game.css') }}" />
 </head>
 
 <body>
-    <!-- Top Navbar -->
-    <header>
-        <div class="logo">
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">&lt;logo_pic&gt;</a>
-            <span class="page-title">Add New Games</span>
-        </div>
-        <nav class="top-nav">
-            <a href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}">HOME</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
-        </nav>
-    </header>
+    <!-- <header> -->
+    <div class="navbar">
+      <a
+        class="publisher-title"
+        href="{{ url_for('publisher.publisher_homepage', publisher_id=publisher_id) }}"
+        >Publisher Panel</a
+      >
+    </div>
+    <!-- </header> -->
 
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-            <ul>
-                <li>
-                    <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">
-                        My Games
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}" class="active">
-                        Add New Games
-                    </a>
-                </li>
-            </ul>
-        </aside>
+        <div class="sidebar">
+            <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">My Games</a>
+            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}"class="active">Add New Games</a>
+        </div>
 
         <!-- Main Content -->
         <main class="main-content">

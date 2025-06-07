@@ -1,17 +1,29 @@
-from flask import Blueprint, request, flash, redirect, url_for
-from order.controller.order_controller import GamerController
+from flask import Blueprint
+from order.controller import order_controller 
 
-gamer_bp = Blueprint(
-    'gamer',
+order_bp = Blueprint(
+    'order',
     __name__,
     template_folder='../view',   # path relatif dari order/route ke template
     static_folder='../view',      # path relatif ke folder CSS
-    static_url_path='/gamer_static'   # URL prefix untuk akses CSS
+    static_url_path='/order_static'   # URL prefix untuk akses CSS
 )
 
-@gamer_bp.route('/library/<int:gamer_id>')
-def gamer_library(gamer_id):
-    return GamerController.library(gamer_id)
+order_bp.route('/library/<int:gamer_id>')(order_controller.library)
+order_bp.route('/cart/<int:gamer_id>')(order_controller.show_cart)
+order_bp.route('/cart/checkout/<int:gamer_id>', methods=['POST'])(order_controller.checkout)
+order_bp.route('/cart/add/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.add_to_cart)
+order_bp.route('/cart/remove/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.remove_from_cart)
+order_bp.route('/buy/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.buy_game)
+order_bp.route('/uninstall/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.uninstall_game)
+order_bp.route('/review/list/<int:game_id>')(order_controller.get_reviews)
+order_bp.route('/review/add/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.add_review)
+
+# def remove_from_cart(gamer_id, game_id):
+#     GamerController.remove_from_cart(gamer_id, game_id)
+#     return redirect(url_for('gamer.show_cart', gamer_id=gamer_id))
+# def add_to_cart(gamer_id, game_id):
+#     return GamerController.add_to_cart(gamer_id, game_id)
 
 # @gamer_bp.route('/storepage/<int:gamer_id>')
 # def gamer_storepage(gamer_id):
@@ -21,26 +33,9 @@ def gamer_library(gamer_id):
 # def genre_detail(genre, gamer_id):
 #     return GamerController.genre_detail(genre, gamer_id)
 
-# @gamer_bp.route('/buy/<int:gamer_id>/<int:game_id>', methods=['POST'])
-# def buy_game(gamer_id, game_id):
-#     return GamerController.buy_game(gamer_id, game_id)
 
-# @gamer_bp.route('/uninstall/<int:gamer_id>/<int:game_id>', methods=['POST'])
-# def uninstall_game(gamer_id, game_id):
-#     return GamerController.uninstall_game(gamer_id, game_id)
 
-# @gamer_bp.route('/cart/<int:gamer_id>')
-# def show_cart(gamer_id):
-#     return GamerController.show_cart(gamer_id)
 
-# @gamer_bp.route('/cart/add/<int:gamer_id>/<int:game_id>', methods=['POST'])
-# def add_to_cart(gamer_id, game_id):
-#     return GamerController.add_to_cart(gamer_id, game_id)
-
-# @gamer_bp.route('/cart/remove/<int:gamer_id>/<int:game_id>', methods=['POST'])
-# def remove_from_cart(gamer_id, game_id):
-#     GamerController.remove_from_cart(gamer_id, game_id)
-#     return redirect(url_for('gamer.show_cart', gamer_id=gamer_id))
 
 # @gamer_bp.route('/cart/checkout/<int:gamer_id>', methods=['POST'])
 # def checkout(gamer_id):
@@ -54,6 +49,3 @@ def gamer_library(gamer_id):
 #     review_text = data.get('review')
 #     return GamerController.add_review(gamer_id, game_id, review_text)
 
-# @gamer_bp.route('/gamer/review/list/<int:game_id>')
-# def get_reviews(game_id):
-#     return GamerController.get_reviews(game_id)

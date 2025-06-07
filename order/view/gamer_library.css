@@ -12,78 +12,64 @@ body {
     color: white;
 }
 
-header {
-    background-color: #111;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
+/* Logo dan Header */
 .logo a {
+    font-family: 'Orbitron', sans-serif;
     text-decoration: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1.5rem;
-    transition: color 0.3s ease, transform 0.3s ease;
+    color: #1e90ff;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
 }
 
 .logo a:hover {
-    color: #1e90ff;
+    color: #00ffc8;
     transform: scale(1.1);
-}
-
-.search-bar {
-    flex: 1;
-    max-width: 400px;
-    margin: 0 20px;
-    display: flex;
-    border: 1px solid #555;
-    border-radius: 20px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-}
-
-.search-bar:hover {
-    box-shadow: 0 0 10px #1e90ff;
-}
-
-.search-bar input {
-    padding: 10px;
-    flex: 1;
-    border: none;
-    outline: none;
-    background: #000;
-    color: white;
-}
-
-.search-bar button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-nav {
-    display: flex;
-    gap: 20px;
+    text-shadow: 0 0 10px #00ffc8;
 }
 
 nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease, transform 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
 }
 
-nav a:hover,
-nav a.active {
-    color: #1e90ff;
-    transform: scale(1.1);
+.navbar {
+  width: 100%;
+  padding: 16px 32px;
+  background-color: #121212;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo a {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  margin-right: 2px; /* Tambah jarak ke tepi kanan */
+}
+
+.nav-link {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #1f1f1f;
+  color: #ffffff;
 }
 
 #products {
@@ -92,6 +78,7 @@ nav a.active {
     justify-content: center;
     gap: 25px;
     padding: 0 15px;
+    margin-top: 45px;
 }
 
 .card {
@@ -103,6 +90,7 @@ nav a.active {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
     transition: transform 0.3s ease;
     background-color: #000;
+    font-family: Chakra Petch, sans-serif;
 }
 
 .card:hover {
@@ -141,6 +129,22 @@ nav a.active {
 .card .info p {
     margin: 5px 0 0;
     font-size: 0.9rem;
+}
+
+.uninstallButton {
+  margin-top: 10px;
+  padding: 6px 12px;
+  border: none;
+  background-color: #ff4c4c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.uninstallButton:hover {
+  background-color: #d84343;
 }
 
 

@@ -7,7 +7,7 @@ store_bp = Blueprint(
     __name__,
     template_folder='../view',
     static_folder='../view',
-    static_url_path='/gamer_static'
+    static_url_path='/store_static'
 )
 
 store_bp.route('/store/<int:gamer_id>')(store_controller.storepage)
