@@ -231,7 +231,6 @@ def add_game_to_cart(gamer_id, game_id):
     cursor.close()
     conn.close()
 
-
 def remove_game_from_cart(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -239,7 +238,6 @@ def remove_game_from_cart(gamer_id, game_id):
     conn.commit()
     cursor.close()
     conn.close()
-
 
 def get_selected_games(game_ids):
     conn = get_db_connection()

@@ -1,4 +1,5 @@
 from shared.database import get_db_connection
+from organize_game.model.Game import Game
 
 def get_games_by_publisher(publisher_id):
     db = get_db_connection()
