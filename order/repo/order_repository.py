@@ -1,5 +1,9 @@
+from multiprocessing import connection
 from shared.database import get_db_connection
-import base64
+from datetime import datetime
+from order.model.Order import Order
+from organize_game.model.Game import Game 
+from order.model.Cart import Cart
 
 def get_library_games(gamer_id):
     conn = get_db_connection()
@@ -15,6 +19,7 @@ def get_library_games(gamer_id):
     conn.close()
     return rows
 
+
 def add_to_library(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -22,6 +27,7 @@ def add_to_library(gamer_id, game_id):
     conn.commit()
     cursor.close()
     conn.close()
+
 
 def get_all_games():
     conn = get_db_connection()
@@ -34,7 +40,19 @@ def get_all_games():
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
-    return rows
+
+    result = []
+    for row in rows:
+        game = Game(
+            game_id=row[0],
+            game_name=row[1],
+            game_desc=row[2],
+            game_price=row[3],
+            game_image=row[4],
+            publisher_name=row[5]
+        )
+        result.append(game)
+    return result
 
 def remove_from_library(gamer_id, game_id):
     conn = get_db_connection()
@@ -44,6 +62,7 @@ def remove_from_library(gamer_id, game_id):
     cursor.close()
     conn.close()
 
+
 def get_store_genres():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -52,6 +71,7 @@ def get_store_genres():
     cursor.close()
     conn.close()
     return rows
+
 
 def get_games_by_genre(genre):
     conn = get_db_connection()
@@ -67,6 +87,7 @@ def get_games_by_genre(genre):
     conn.close()
     return rows
 
+
 def check_game_owned(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -80,6 +101,7 @@ def check_game_owned(gamer_id, game_id):
     conn.close()
     return owned
 
+
 def get_game_price(game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -88,6 +110,7 @@ def get_game_price(game_id):
     cursor.close()
     conn.close()
     return float(result[0]) if result else None
+
 
 def get_wallet_balance(gamer_id):
     conn = get_db_connection()
@@ -98,6 +121,7 @@ def get_wallet_balance(gamer_id):
     conn.close()
     return float(result[0]) if result else 0
 
+
 def create_game_order(gamer_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -106,7 +130,7 @@ def create_game_order(gamer_id):
     conn.commit()
     cursor.close()
     conn.close()
-    return order_id
+    return Order(order_id=order_id, gamer_id=gamer_id)
 
 def insert_order_detail(order_id, game_id):
     conn = get_db_connection()
@@ -131,6 +155,7 @@ def update_wallet_balance(gamer_id, new_balance):
     cursor.close()
     conn.close()
 
+
 def uninstall_game(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -144,18 +169,36 @@ def uninstall_game(gamer_id, game_id):
     conn.close()
 
 def get_cart_games(gamer_id):
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT g.*
+    query = """
+        SELECT c.gamer_id, c.game_id, c.date_added,
+               g.game_name, g.game_desc, g.game_genre, g.game_price, g.game_image, g.publisher_id
         FROM cart c
         JOIN game g ON c.game_id = g.game_id
         WHERE c.gamer_id = %s
-    """, (gamer_id,))
+    """
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, (gamer_id,))
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
-    return rows
+
+    result = []
+    for row in rows:
+        cart = Cart(row[0], row[1], row[2])
+        game_info = {
+            "game_id": row[1],
+            "game_name": row[3],
+            "game_desc": row[4],
+            "game_genre": row[5],
+            "game_price": row[6],
+            "game_image": row[7],
+            "publisher_id": row[8]
+        }
+        result.append({"cart": cart, "game": game_info})
+
+    return result
 
 def is_game_owned(gamer_id, game_id):
     conn = get_db_connection()
@@ -166,6 +209,7 @@ def is_game_owned(gamer_id, game_id):
     conn.close()
     return result
 
+
 def is_game_in_cart(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -175,13 +219,18 @@ def is_game_in_cart(gamer_id, game_id):
     conn.close()
     return result
 
+
 def add_game_to_cart(gamer_id, game_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO cart (gamer_id, game_id) VALUES (%s, %s)", (gamer_id, game_id))
+    cursor.execute("""
+        INSERT INTO cart (gamer_id, game_id, date_added)
+        VALUES (%s, %s, %s)
+    """, (gamer_id, game_id, datetime.now()))
     conn.commit()
     cursor.close()
     conn.close()
+
 
 def remove_game_from_cart(gamer_id, game_id):
     conn = get_db_connection()
@@ -191,9 +240,10 @@ def remove_game_from_cart(gamer_id, game_id):
     cursor.close()
     conn.close()
 
+
 def get_selected_games(game_ids):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     format_strings = ','.join(['%s'] * len(game_ids))
     cursor.execute(f"""
         SELECT game_id, game_price
@@ -203,11 +253,13 @@ def get_selected_games(game_ids):
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
-    return rows
+
+    # Convert to list of dicts
+    return [{"game_id": row[0], "game_price": row[1]} for row in rows]
 
 def get_owned_games(gamer_id, game_ids):
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     format_strings = ','.join(['%s'] * len(game_ids))
     cursor.execute(f"""
         SELECT game_id FROM library
@@ -217,6 +269,7 @@ def get_owned_games(gamer_id, game_ids):
     cursor.close()
     conn.close()
     return rows
+
 
 def add_games_to_library_and_remove_from_cart(gamer_id, game_ids):
     conn = get_db_connection()

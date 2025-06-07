@@ -1,5 +1,5 @@
 class Order:
-    def __init__(self, order_id, gamer_id):
+    def __init__(self, order_id=None, gamer_id=None):
         self._order_id = order_id
         self._gamer_id = gamer_id
 

@@ -1,8 +1,10 @@
+from datetime import datetime
+
 class Cart:
     def __init__(self, gamer_id=None, game_id=None, date_added=None):
         self._gamer_id = gamer_id
         self._game_id = game_id
-        self._date_added = date_added
+        self._date_added = date_added or datetime.now()
 
     @property
     def gamer_id(self):

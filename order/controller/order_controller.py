@@ -32,11 +32,10 @@ def buy_game(gamer_id, game_id):
         return jsonify({"status": "error", "message": "Saldo tidak cukup"})
 
     try:
-        order_id = order_repository.create_game_order(gamer_id)
-        order_repository.insert_order_detail(order_id, game_id)
+        order = order_repository.create_game_order(gamer_id)  # Ini sudah objek Order
+        order_repository.insert_order_detail(order.order_id, game_id)  # Ambil order_id-nya
         order_repository.update_wallet_balance(gamer_id, balance - price)
 
-        # ✅ Tambahin ke library secara manual
         order_repository.add_to_library(gamer_id, game_id)
 
         return jsonify({"status": "success"})
@@ -56,11 +55,25 @@ def show_cart(gamer_id):
 
     games = []
     for row in rows:
-        image_data = base64.b64encode(row['game_image']).decode('utf-8') if row['game_image'] else None
-        image_url = f"data:image/jpeg;base64,{image_data}" if image_data else "/static/asset/default.jpg"
-        game = Game(game_id=row['game_id'], name=row['game_name'],description=row.get('game_desc', ''), genre=row['game_genre'], price=row['game_price'], publisher_id=row['publisher_id']
+        game_info = row["game"]
+
+        image_blob = game_info.get("game_image")
+        if image_blob:
+            image_data = base64.b64encode(image_blob).decode('utf-8')
+            image_url = f"data:image/jpeg;base64,{image_data}"
+        else:
+            image_url = "/static/asset/default.jpg"
+
+        game = Game(
+            game_id=game_info.get("game_id"),
+            name=game_info.get("game_name"),
+            description=game_info.get("game_desc", ''),
+            genre=game_info.get("game_genre", ''),
+            price=game_info.get("game_price", 0),
+            publisher_id=game_info.get("publisher_id")
         )
         game.cover_url = image_url
+
         games.append(game)
 
     return render_template("gamer_cart.html", gamer_id=gamer_id, cart_items=games)
@@ -100,7 +113,7 @@ def checkout(gamer_id):
         return redirect(url_for('order.show_cart', gamer_id=gamer_id))
 
     owned_games_rows = order_repository.get_owned_games(gamer_id, selected_game_ids)
-    owned_games = {row['game_id'] for row in owned_games_rows}
+    owned_games = {row[0] for row in owned_games_rows}
 
     to_checkout = [g for g in selected_games if g['game_id'] not in owned_games]
     if not to_checkout:

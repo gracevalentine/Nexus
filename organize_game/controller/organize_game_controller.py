@@ -1,6 +1,6 @@
 # from tkinter import Image
 from flask import render_template, request, redirect, session, url_for, flash
-from PIL import Image
+# from PIL import Image
 import base64
 import io
 from organize_game.repo import organize_game_repository
