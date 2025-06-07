@@ -22,8 +22,8 @@
             <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="nav-link">HOME</a>
             <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
             <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link">STORE</a>
-            <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link">CART</a>
-            <a href="{{ url_for('wallet.walletpage', gamer_id=gamer_id) }}" class="nav-link active">WALLET</a>
+            <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link active">CART</a>
+            <a href="{{ url_for('wallet.walletpage', gamer_id=gamer_id) }}" class="nav-link">WALLET</a>
             <a href="{{ url_for('auth.logout_controller') }}" class="nav-link">LOGOUT</a>
         </nav>
     </header>

@@ -124,20 +124,3 @@ def checkout(gamer_id):
         flash(f"Gagal checkout: {str(e)}")
         return redirect(url_for('order.show_cart', gamer_id=gamer_id))
 
-def add_review(gamer_id, game_id):
-    data = request.get_json()
-    review_text = data.get("review", "").strip()
-
-    if not review_text:
-        return jsonify({"status": "error", "message": "Review kosong!"})
-
-    try:
-        order_repository.add_review(review_text, gamer_id, game_id)
-        return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
-
-def get_reviews(game_id):
-    rows = order_repository.get_reviews(game_id)
-    result = [{"review": r[0], "name": r[1], "gamer_id": r[2]} for r in rows]
-    return jsonify(reviews=result)

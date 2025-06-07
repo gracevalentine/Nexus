@@ -16,8 +16,7 @@ order_bp.route('/cart/add/<int:gamer_id>/<int:game_id>', methods=['POST'])(order
 order_bp.route('/cart/remove/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.remove_from_cart)
 order_bp.route('/buy/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.buy_game)
 order_bp.route('/uninstall/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.uninstall_game)
-order_bp.route('/review/list/<int:game_id>')(order_controller.get_reviews)
-order_bp.route('/review/add/<int:gamer_id>/<int:game_id>', methods=['POST'])(order_controller.add_review)
+
 
 # def remove_from_cart(gamer_id, game_id):
 #     GamerController.remove_from_cart(gamer_id, game_id)

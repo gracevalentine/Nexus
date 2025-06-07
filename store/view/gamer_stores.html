@@ -214,7 +214,7 @@
         const reviewText = document.getElementById("review-input").value.trim();
         if (!reviewText) return alert("Review tidak boleh kosong!");
 
-        fetch(`/order/review/add/${selectedGamerId}/${selectedGameId}`, {
+        fetch(`/gamer/review/add/${selectedGamerId}/${selectedGameId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ review: reviewText }),
@@ -233,7 +233,7 @@
       }
 
       function loadReviews() {
-        fetch(`/order/review/list/${selectedGameId}`)
+        fetch(`/gamer/review/list/${selectedGameId}`)
           .then((res) => res.json())
           .then((data) => {
             console.log("REVIEW JSON:", data); // Debug log
@@ -247,9 +247,9 @@
                 const isSelf =
                   parseInt(r.gamer_id) === parseInt(selectedGamerId);
 
-                p.innerHTML = `🗣️ <strong>${r.name}${
+                p.innerHTML = `🗣️ <strong>${r.reviewer}${
                   isSelf ? " (kamu)" : ""
-                }</strong>: ${r.review}`;
+                }</strong>: ${r.review_text} <br> <em>${r.date}</em>`;
                 p.style.backgroundColor = isSelf ? "#1e90ff" : "#222";
                 p.style.color = isSelf ? "white" : "inherit";
 

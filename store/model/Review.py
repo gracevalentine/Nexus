@@ -1,4 +1,4 @@
-from model.Game import Game
+from organize_game.model.Game import Game
 from datetime import datetime
 
 class Review:

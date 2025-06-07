@@ -228,28 +228,3 @@ def add_games_to_library_and_remove_from_cart(gamer_id, game_ids):
     cursor.close()
     conn.close()
 
-def add_review(review_text, gamer_id, game_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO review (review_text, reviewer, game_id)
-        VALUES (%s, %s, %s)
-    """, (review_text, gamer_id, game_id))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-def get_reviews(game_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT r.review_text, a.username, r.reviewer
-        FROM review r
-        JOIN account a ON r.reviewer = a.id
-        WHERE r.game_id = %s
-        ORDER BY r.review_date DESC
-    """, (game_id,))
-    rows = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return rows
