@@ -14,11 +14,12 @@
     <header class="navbar">
         <div class="navbar-left">
             <div class="logo">
-                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">
+                  <img src="{{ url_for('auth.static', filename='nexus_logo.png') }}" alt="NEXUS Logo" class="logo-img">
+                </a>
             </div>
         </div>
         <nav class="navbar-links">
-            <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="nav-link">HOME</a>
             <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
             <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link">STORE</a>
             <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link">CART</a>
@@ -39,7 +40,7 @@
         <h1>Wallet Anda</h1>
         <div class="wallet-balance">
             <span>Saldo saat ini:</span>
-            <h2>Rp {{ wallet_balance }}</h2>
+            <h2>Rp {{ '{:,.0f}'.format(wallet_balance | float).replace(',', '.') }}</h2>
             <button class="topup-btn" onclick="openTopupModal()">TOP UP</button>
         </div>
 

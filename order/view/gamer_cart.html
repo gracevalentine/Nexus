@@ -15,11 +15,12 @@
     <header class="navbar">
         <div class="navbar-left">
             <div class="logo">
-                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">
+                  <img src="{{ url_for('auth.static', filename='nexus_logo.png') }}" alt="NEXUS Logo" class="logo-img">
+                </a>
             </div>
         </div>
         <nav class="navbar-links">
-            <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="nav-link">HOME</a>
             <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
             <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link">STORE</a>
             <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link active">CART</a>
@@ -33,7 +34,7 @@
     messages %}
     <ul class="flashes">
       {% for category, message in messages %}
-      <li class="flash {{ category }}">{{ message }}</li>
+      <!-- <li class="flash {{ category }}">{{ message }}</li> -->
       {% endfor %}
     </ul>
     {% endif %} {% endwith %}
@@ -69,7 +70,7 @@
         </div>
       </form>
       {% else %}
-      <p class="empty-cart">Keranjang kamu kosong bro 😅</p>
+      <p class="empty-cart">Keranjang kamu kosong!</p>
       {% endif %}
     </main>
   </body>

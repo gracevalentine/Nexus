@@ -5,6 +5,10 @@
 }
 
 body {
+    background: url('bgwallet.jpeg') no-repeat center fixed;
+    background-size: cover; 
+    background-color: #000;
+    color: white;
     background-color: #000;
     color: white;
 }
@@ -26,6 +30,19 @@ body {
     text-shadow: 0 0 10px #00ffc8;
 }
 
+.logo-img {
+    height: 30px; /* atau 50px, tergantung ukuran gambarnya */
+    width: auto;
+    transition: all 0.3s ease;
+    margin-right: 40px;
+    margin-bottom: -5px;
+}
+
+.logo-img:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px #00ffc8);
+}
+
 nav a {
     font-family: 'Orbitron', sans-serif;
 }
@@ -33,21 +50,18 @@ nav a {
 .navbar {
   width: 100%;
   padding: 16px 32px;
-  background-color: #121212;
+  background: rgba(18, 18, 18, 0.4);/* transparan */
   color: #fff;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); 
+  border: 1px solid rgba(255, 255, 255, 0.1); /* glass border halus */
+  border-radius: 5px; /* opsional: kasih sedikit lengkung */
 }
 
-.logo a {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ffffff;
-  text-decoration: none;
-  letter-spacing: 1px;
-}
 
 .navbar-links {
   display: flex;
@@ -60,14 +74,16 @@ nav a {
   text-decoration: none;
   font-size: 16px;
   padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.2s ease-in-out;
+  /* border-radius: 8px; */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: #1f1f1f;
   color: #ffffff;
+  border-bottom: #ecedef 2px solid; /* garis bawah */
+  transform: translateY(-2px); /* efek hover */
+  transform: scale(1.05);
 }
 
 .topup-modal {

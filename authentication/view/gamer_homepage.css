@@ -7,7 +7,6 @@
 body {
     background: url('bggamer.jpg') no-repeat center fixed;
     background-size: cover; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
     overflow: hidden;
 }
@@ -36,20 +35,16 @@ nav a {
 .navbar {
   width: 100%;
   padding: 16px 32px;
-  background-color: #121212;
+  background: rgba(18, 18, 18, 0.4);/* transparan */
   color: #fff;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.logo a {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ffffff;
-  text-decoration: none;
-  letter-spacing: 1px;
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); 
+  border: 1px solid rgba(255, 255, 255, 0.1); /* glass border halus */
+  border-radius: 5px; /* opsional: kasih sedikit lengkung */
 }
 
 .navbar-links {
@@ -63,14 +58,16 @@ nav a {
   text-decoration: none;
   font-size: 16px;
   padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.2s ease-in-out;
+  /* border-radius: 8px; */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: #1f1f1f;
   color: #ffffff;
+  border-bottom: #ecedef 2px solid; /* garis bawah */
+  transform: translateY(-2px); /* efek hover */
+  transform: scale(1.05);
 }
 
 /* HERO SECTION */
@@ -82,10 +79,36 @@ nav a {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 20px;
-    margin: 0 auto;
-    height: 85vh;
+    height: 80vh;
+    
+}
 
+.hero-content {
+    z-index: 2;
+    background-clip: padding-box;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    margin: auto;
+    animation: fadein 1.2s ease forwards;
+    opacity: 0;
+    align-items: center; 
+    justify-content: center;
+    text-align: center;  
+}
+
+.tagline {
+    font-size: 4.2rem;
+    color: #969494;
+    margin-top: 5px;
+    font-family: "Chakra Petch", sans-serif;
+    text-align: center;
+}
+
+.description {
+    font-size: 1.7rem;
+    font-family: "Chakra Petch", sans-serif;
+    line-height: 1.7;
+    color: #969494;
+    padding: 10px 200px 0px 200px;
 }
 
 .hero::before {
@@ -97,70 +120,72 @@ nav a {
     z-index: 1;
 }
 
-.hero-content h1 {
+.hero-content a {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3.2rem;
-    color: #cb63f8e6;
-    /* text-shadow: 0 0 12px #cb63f8e6, 0 0 24px #cb63f8e6; */
+    font-size: 13rem;
+    color: #0c3bb2;
     margin-bottom: 20px;
-}
-
-.hero-content {
-    /* position: relative; */
-    z-index: 2;
-    max-width: 720px;
-    padding: 30px 32px;
-    background: rgba(15, 15, 15, 0.45); /* lebih gelap, biar teks makin pop out */
-    border-radius: 16px;
-    /* border: 2px solid #00ffc8; */
-    background-clip: padding-box;
-    /* box-shadow: 0 0 25px rgba(0, 255, 200, 0.15), 0 0 60px rgba(0, 255, 200, 0.1); */
-    animation: neon-border 4s infinite ease-in-out;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    backdrop-filter: blur(6px); /* bikin efek blur belakang kayak kaca*/
-    margin: auto;
-}
-
-.hero-content:hover {
     transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 0 40px rgba(219, 74, 244, 0.4);
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 0 15px #000000, 0 0 40px rgba(0, 255, 200, 0.3);
+    animation: pulse-glow 3s infinite ease-in-out;
+    
 }
 
-@keyframes neon-border {
+.hero-content a:hover {
+    color: #0c3bb2;
+    margin-bottom: 20px;
+    transform: translateY(-8px) scale(1.01);
+    text-shadow: 0 0 30px #7b8292;
+}
+
+
+@keyframes pulse-glow {
     0% {
-        border-color: #1e90ff;
+        text-shadow: 0 0 10px #001325;
     }
     50% {
-        border-color: #00ffc8;
+        text-shadow: 0 0 20px #70a6f3;
     }
     100% {
-        border-color: #1e90ff;
+        text-shadow: 0 0 10px #51a8ff;
     }
 }
 
-.hero-content p {
-    font-size: 1rem;
-    font-family: "Chakra Petch", sans-serif;
-    line-height: 1.7;
-    color: #ddd;
+@keyframes fadein {
+    to {
+        opacity: 1;
+    }
 }
 
-/* Wallet Widget Tambahan */
+/* wallet floating badge */
 .wallet-widget {
-    background: linear-gradient(45deg, #1e90ff, #00ffc8);
-    color: black;
-    font-weight: bold;
-    padding: 10px 16px;
-    border-radius: 25px;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(0,255,200,0.3);
-    transition: all 0.3s ease-in-out;
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: linear-gradient(45deg, #1e90ff, #9d00ff);
+  color: white;
+  font-weight: bold;
+  font-family: 'Orbitron', sans-serif;
+  padding: 10px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 255, 200, 0.3);
+  transition: all 0.3s ease-in-out;
 }
 
 .wallet-widget:hover {
-    background: #00178b;
-    color: white;
-    box-shadow: 0 0 20px #00ffc8;
+  background: #00178b;
+  color: #00ffc8;
+  box-shadow: 0 0 25px #00ca9e;
 }
 
 /* Responsive */

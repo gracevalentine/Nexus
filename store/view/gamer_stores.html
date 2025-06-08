@@ -16,7 +16,9 @@
     <header class="navbar">
         <div class="navbar-left">
             <div class="logo">
-                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">NEXUS</a>
+                <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}">
+                  <img src="{{ url_for('auth.static', filename='nexus_logo.png') }}" alt="NEXUS Logo" class="logo-img">
+                </a>
             </div>
         </div>
       <div class="search-bar">
@@ -24,11 +26,10 @@
         <button>🔍</button>
       </div>
         <nav class="navbar-links">
-            <a href="{{ url_for('auth.gamer_homepage', gamer_id=gamer_id) }}" class="nav-link">HOME</a>
             <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
-            <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link">STORE</a>
+            <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link active">STORE</a>
             <a href="{{ url_for('order.show_cart', gamer_id=gamer_id) }}" class="nav-link">CART</a>
-            <a href="{{ url_for('wallet.walletpage', gamer_id=gamer_id) }}" class="nav-link active">WALLET</a>
+            <a href="{{ url_for('wallet.walletpage', gamer_id=gamer_id) }}" class="nav-link">WALLET</a>
             <a href="{{ url_for('auth.logout_controller') }}" class="nav-link">LOGOUT</a>
         </nav>
     </header>
@@ -98,7 +99,7 @@
       {% for game in games %}
       <div
         class="card"
-        onclick="showModal(`{{ game.name|escape }}`, `{{ game.image }}`, `{{ game.description|escape }}`, `{{ game.price }}`, `{{ game.publisher|escape }}`, `{{ game.id }}`)"
+        onclick="showModal(`{{ game.name|escape }}`, `{{ game.image }}`, `{{ game.description|escape }}`, `Rp {{ '{:,.0f}'.format(game.price | float).replace(',', '.') }}`, `{{ game.publisher|escape }}`, `{{ game.id }}`)"
       >
         <img src="{{ game.image }}" alt="{{ game.name }}" />
         <div class="hover-title">{{ game.name }}</div>
@@ -169,7 +170,7 @@
         document.getElementById("modal-title").textContent = title;
         document.getElementById("modal-description").textContent = description;
         document.getElementById("modal-publisher-name").textContent = publisher;
-        document.getElementById("modal-price").textContent = "Rp " + price;
+        document.getElementById("modal-price").textContent = price;
         document.getElementById("gameModal").style.display = "block";
         selectedGameId = gameId;
         selectedPrice = price;
