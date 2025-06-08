@@ -7,14 +7,23 @@ def library(gamer_id):
     rows = order_repository.get_library_games(gamer_id)
 
     games = []
-    for game_id, name, genre, image_blob in rows:
-        image = base64.b64encode(image_blob).decode('utf-8') if image_blob else None
-        image_url = f"data:image/jpeg;base64,{image}" if image else "/static/asset/default.jpg"
+    for game_id, name, genre, image_blob, status in rows:
+        # Pastikan status integer, default 1 jika None
+        status_int = int(status) if status is not None else 1
+
+        # Convert image blob ke base64 jika ada
+        if image_blob:
+            image = base64.b64encode(image_blob).decode('utf-8')
+            image_url = f"data:image/jpeg;base64,{image}"
+        else:
+            image_url = "/static/asset/default.jpg"
+
         games.append({
             "id": game_id,
             "name": name,
             "genre": genre,
-            "image": image_url
+            "image": image_url,
+            "status": status_int
         })
 
     return render_template("gamer_library.html", gamer_id=gamer_id, games=games)

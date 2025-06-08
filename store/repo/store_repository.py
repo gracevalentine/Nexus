@@ -2,6 +2,7 @@ from shared.database import get_db_connection
 from organize_game.model.Game import Game
 from store.model.Review import Review
 from datetime import datetime
+from organize_game.model.GameStatus import GameStatus
 
 def get_all_games():
     conn = get_db_connection()
@@ -12,7 +13,8 @@ def get_all_games():
             g.publisher_id, g.game_image, g.game_status, a.name AS publisher_name
         FROM game g
         JOIN account a ON g.publisher_id = a.id
-    """)
+        WHERE g.game_status = %s
+    """, (GameStatus.AVAILABLE.value,))  # pake enum value (1)
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -26,7 +28,7 @@ def get_all_games():
             genre=row['game_genre'],
             price=row['game_price'],
             publisher_id=row['publisher_id'],
-            status=row['game_status']
+            status=GameStatus(row['game_status'])  # map ke enum
         )
 
         games.append({
@@ -35,7 +37,6 @@ def get_all_games():
             "publisher_name": row['publisher_name']
         })
     return games
-
 
 def get_games_by_genre(genre):
     conn = get_db_connection()
@@ -46,8 +47,8 @@ def get_games_by_genre(genre):
             g.publisher_id, g.game_status, g.game_image, a.name AS publisher_name
         FROM game g
         JOIN account a ON g.publisher_id = a.id
-        WHERE g.game_genre = %s
-    """, (genre,))
+        WHERE g.game_genre = %s AND g.game_status = %s
+    """, (genre, GameStatus.AVAILABLE.value))
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -61,7 +62,7 @@ def get_games_by_genre(genre):
             genre=row['game_genre'],
             price=row['game_price'],
             publisher_id=row['publisher_id'],
-            status=row['game_status']
+            status=GameStatus(row['game_status'])
         )
 
         games.append({
@@ -74,7 +75,6 @@ def get_games_by_genre(genre):
             "publisher": row['publisher_name']
         })
     return games
-
 
 def get_game_by_id(game_id):
     conn = get_db_connection()

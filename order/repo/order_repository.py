@@ -6,19 +6,19 @@ from organize_game.model.Game import Game
 from order.model.Cart import Cart
 
 def get_library_games(gamer_id):
+    query = """
+        SELECT g.game_id, g.game_name, g.game_genre, g.game_image, g.game_status
+        FROM game g
+        JOIN library l ON g.game_id = l.game_id
+        WHERE l.gamer_id = %s
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT g.game_id, g.game_name, g.game_genre, g.game_image
-        FROM library l
-        JOIN game g ON l.game_id = g.game_id
-        WHERE l.gamer_id = %s
-    """, (gamer_id,))
+    cursor.execute(query, (gamer_id,))
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
     return rows
-
 
 def add_to_library(gamer_id, game_id):
     conn = get_db_connection()
