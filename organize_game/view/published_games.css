@@ -1,7 +1,26 @@
-body {
-  font-family: Arial, sans-serif;
+/* =============== Reset & Base =============== */Add commentMore actions
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #000;
+  color: white;
+}
+
+/* =============== Header =============== */
+.publisher-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff; 
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  text-decoration: none;
+  position: relative;
 }
 
 .navbar {

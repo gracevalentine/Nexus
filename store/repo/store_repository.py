@@ -28,7 +28,7 @@ def get_all_games():
             genre=row['game_genre'],
             price=row['game_price'],
             publisher_id=row['publisher_id'],
-            status=GameStatus(row['game_status'])  # map ke enum
+            status=GameStatus[row['game_status']]  # map ke enum
         )
 
         games.append({

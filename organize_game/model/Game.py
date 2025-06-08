@@ -10,11 +10,15 @@ class Game:
         self._publisher_id = publisher_id
         # safe convert status ke GameStatus enum, kalau gagal default ke AVAILABLE
         try:
-            if isinstance(status, int):
-                self._status = GameStatus(status)
-            else:
+            if isinstance(status, GameStatus):
                 self._status = status
-        except ValueError:
+            elif isinstance(status, int):
+                self._status = GameStatus(status)
+            elif isinstance(status, str):
+                self._status = GameStatus[status]
+            else:
+                self._status = GameStatus.AVAILABLE
+        except (ValueError, KeyError):
             self._status = GameStatus.AVAILABLE
         self._image = image
 

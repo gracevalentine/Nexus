@@ -1,15 +1,21 @@
 from flask import render_template, request, jsonify, flash, redirect, url_for, session
 from organize_game.model.Game import Game
+from organize_game.model.GameStatus import GameStatus
 from order.repo import order_repository
 import base64
 
 def library(gamer_id):
     rows = order_repository.get_library_games(gamer_id)
-
+    
+    status_map = {
+        "AVAILABLE": GameStatus.AVAILABLE.value,
+        "NON_AVAILABLE": GameStatus.NON_AVAILABLE.value
+    }
+    
     games = []
     for game_id, name, genre, image_blob, status in rows:
         # Pastikan status integer, default 1 jika None
-        status_int = int(status) if status is not None else 1
+        status_int = status_map.get (status, GameStatus.AVAILABLE.value)
 
         # Convert image blob ke base64 jika ada
         if image_blob:
