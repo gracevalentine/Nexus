@@ -9,7 +9,7 @@ def get_all_games():
     cursor.execute("""
         SELECT 
             g.game_id, g.game_name, g.game_desc, g.game_genre, g.game_price, 
-            g.publisher_id, g.game_image, a.name AS publisher_name
+            g.publisher_id, g.game_image, g.game_status, a.name AS publisher_name
         FROM game g
         JOIN account a ON g.publisher_id = a.id
     """)
@@ -19,33 +19,34 @@ def get_all_games():
 
     games = []
     for row in rows:
-        # Buat objek Game biasa, tanpa image dan publisher_name
         game = Game(
             game_id=row['game_id'],
             name=row['game_name'],
             description=row['game_desc'],
             genre=row['game_genre'],
             price=row['game_price'],
-            publisher_id=row['publisher_id']
+            publisher_id=row['publisher_id'],
+            status=row['game_status']
         )
 
-        # Sisipkan image_blob & publisher_name dalam dict (gak masuk Game)
         games.append({
-            "game": game,  # object Game
+            "game": game,
             "image_blob": row['game_image'],
             "publisher_name": row['publisher_name']
         })
     return games
 
 
-
 def get_games_by_genre(genre):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT game_id, game_name, game_desc, game_genre, game_price, publisher_id
-        FROM game
-        WHERE game_genre = %s
+        SELECT 
+            g.game_id, g.game_name, g.game_desc, g.game_genre, g.game_price, 
+            g.publisher_id, g.game_status, g.game_image, a.name AS publisher_name
+        FROM game g
+        JOIN account a ON g.publisher_id = a.id
+        WHERE g.game_genre = %s
     """, (genre,))
     rows = cursor.fetchall()
     cursor.close()
@@ -59,9 +60,19 @@ def get_games_by_genre(genre):
             description=row['game_desc'],
             genre=row['game_genre'],
             price=row['game_price'],
-            publisher_id=row['publisher_id']
+            publisher_id=row['publisher_id'],
+            status=row['game_status']
         )
-        games.append(game)
+
+        games.append({
+            "id": row['game_id'],
+            "name": row['game_name'],
+            "description": row['game_desc'],
+            "genre": row['game_genre'],
+            "price": row['game_price'],
+            "image_blob": row['game_image'],
+            "publisher": row['publisher_name']
+        })
     return games
 
 
@@ -69,7 +80,9 @@ def get_game_by_id(game_id):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT game_id, game_name, game_desc, game_genre, game_price, publisher_id
+        SELECT 
+            game_id, game_name, game_desc, game_genre, game_price, 
+            publisher_id, game_status
         FROM game
         WHERE game_id = %s
     """, (game_id,))
@@ -84,7 +97,8 @@ def get_game_by_id(game_id):
             description=row['game_desc'],
             genre=row['game_genre'],
             price=row['game_price'],
-            publisher_id=row['publisher_id']
+            publisher_id=row['publisher_id'],
+            status=row['game_status']
         )
     return None
 
@@ -110,7 +124,8 @@ def get_reviews(game_id):
             r.review_text,
             r.review_date,
             a.name AS reviewer,
-            g.game_id, g.game_name, g.game_desc, g.game_genre, g.game_price, g.publisher_id
+            g.game_id, g.game_name, g.game_desc, g.game_genre, 
+            g.game_price, g.publisher_id, g.game_status
         FROM review r
         JOIN account a ON r.reviewer = a.id
         JOIN game g ON r.game_id = g.game_id
@@ -129,7 +144,8 @@ def get_reviews(game_id):
             description=row['game_desc'],
             genre=row['game_genre'],
             price=row['game_price'],
-            publisher_id=row['publisher_id']
+            publisher_id=row['publisher_id'],
+            status=row['game_status']
         )
 
         # Pastikan review_date valid

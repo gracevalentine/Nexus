@@ -33,7 +33,7 @@ def get_all_games():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT g.game_id, g.game_name, g.game_desc, g.game_price, g.game_image, a.name
+        SELECT g.game_id, g.game_name, g.game_desc, g.game_price, g.game_image, a.id, g.game_status
         FROM game g
         JOIN account a ON g.publisher_id = a.id
     """)
@@ -43,13 +43,19 @@ def get_all_games():
 
     result = []
     for row in rows:
+        status_val = row[6]
+        # Jika status gak valid (misal 0 atau None), set ke 1 (AVAILABLE)
+        if status_val not in (1, 2):
+            status_val = 1
+        
         game = Game(
             game_id=row[0],
-            game_name=row[1],
-            game_desc=row[2],
-            game_price=row[3],
-            game_image=row[4],
-            publisher_name=row[5]
+            name=row[1],
+            description=row[2],   # sesuaikan kalau di model kamu parameternya beda
+            price=row[3],
+            image=row[4],
+            publisher_id=row[5],
+            status=status_val
         )
         result.append(game)
     return result
@@ -278,4 +284,3 @@ def add_games_to_library_and_remove_from_cart(gamer_id, game_ids):
     conn.commit()
     cursor.close()
     conn.close()
-

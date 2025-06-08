@@ -64,13 +64,15 @@ def show_cart(gamer_id):
         else:
             image_url = "/static/asset/default.jpg"
 
+        # **PENTING**: jangan lupa kirim status ke Game() juga, kalau nggak bakal error!
         game = Game(
             game_id=game_info.get("game_id"),
             name=game_info.get("game_name"),
             description=game_info.get("game_desc", ''),
             genre=game_info.get("game_genre", ''),
             price=game_info.get("game_price", 0),
-            publisher_id=game_info.get("publisher_id")
+            publisher_id=game_info.get("publisher_id"),
+            status=game_info.get("game_status", 0)  # default 0 atau sesuaikan
         )
         game.cover_url = image_url
 
@@ -136,4 +138,3 @@ def checkout(gamer_id):
     except Exception as e:
         flash(f"Gagal checkout: {str(e)}")
         return redirect(url_for('order.show_cart', gamer_id=gamer_id))
-

@@ -8,7 +8,14 @@ class Game:
         self._genre = genre
         self._price = price
         self._publisher_id = publisher_id
-        self._status = GameStatus(status) if isinstance(status, int) else status
+        # safe convert status ke GameStatus enum, kalau gagal default ke AVAILABLE
+        try:
+            if isinstance(status, int):
+                self._status = GameStatus(status)
+            else:
+                self._status = status
+        except ValueError:
+            self._status = GameStatus.AVAILABLE
         self._image = image
 
     @property
