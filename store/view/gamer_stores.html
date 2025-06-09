@@ -21,10 +21,6 @@
                 </a>
             </div>
         </div>
-      <div class="search-bar">
-        <input type="text" placeholder="Search" />
-        <button>🔍</button>
-      </div>
         <nav class="navbar-links">
             <a href="{{ url_for('order.library', gamer_id=gamer_id) }}" class="nav-link">LIBRARY</a>
             <a href="{{ url_for('gamer.storepage', gamer_id=gamer_id) }}" class="nav-link active">STORE</a>
@@ -33,66 +29,6 @@
             <a href="{{ url_for('auth.logout_controller') }}" class="nav-link">LOGOUT</a>
         </nav>
     </header>
-
-    <!-- Filters -->
-    <section class="store-filters">
-      <div class="filter-group">
-        <div class="dropdown-filter">
-          <button
-            class="dropbtn"
-            id="filter-button"
-            onclick="toggleDropdown('filter-dropdown')"
-          >
-            All Games
-          </button>
-          <div class="dropdown-content" id="filter-dropdown">
-            <a
-              href="#"
-              onclick="selectDropdownOption('filter-button', 'All Games')"
-              >All Games</a
-            >
-            <a
-              href="#"
-              onclick="selectDropdownOption('filter-button', 'New & Trending')"
-              >New & Trending</a
-            >
-            <a
-              href="#"
-              onclick="selectDropdownOption('filter-button', 'Top Sellers')"
-              >Top Sellers</a
-            >
-            <a
-              href="#"
-              onclick="selectDropdownOption('filter-button', 'Top Rated')"
-              >Top Rated</a
-            >
-          </div>
-        </div>
-
-        <div class="dropdown-sort">
-          <span>SORT BY</span>
-          <button
-            class="dropbtn"
-            id="sort-button"
-            onclick="toggleDropdown('sort-dropdown')"
-          >
-            Alphabetical
-          </button>
-          <div class="dropdown-content" id="sort-dropdown">
-            <a
-              href="#"
-              onclick="selectDropdownOption('sort-button', 'Alphabetical A-Z')"
-              >Alphabetical A-Z</a
-            >
-            <a
-              href="#"
-              onclick="selectDropdownOption('sort-button', 'Alphabetical Z-A')"
-              >Alphabetical Z-A</a
-            >
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Game Cards -->
     <section class="store-grid">
