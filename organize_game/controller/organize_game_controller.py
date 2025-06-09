@@ -25,7 +25,7 @@ def add_new_game(publisher_id):
         desc = request.form['game_description']
         genre = request.form['game_genre']
         price = request.form['game_price']
-        status = int(request.form.get('game_status', 1))  # default AVAILABLE
+        status = 1  # default AVAILABLE status kalau mau pakai enum bisa sesuaikan
         image_file = request.files.get('game_image')
         image_data = image_file.read() if image_file else None
 
@@ -33,17 +33,25 @@ def add_new_game(publisher_id):
         flash('Game successfully added!')
         return redirect(url_for('publisher.published_games', publisher_id=publisher_id))
 
-    return render_template('publisher_new_game.html', publisher_id=publisher_id, is_edit=False, statuses=GameStatus)
+    # GET request (form kosong)
+    return render_template(
+        'publisher_new_game.html',
+        publisher_id=publisher_id,
+        is_edit=False,
+        form_action=url_for('publisher.add_new_game', publisher_id=publisher_id),
+        statuses=[],
+        game=None
+    )
+
 
 def edit_game(publisher_id, game_id):
     if request.method == 'POST':
-        # Ambil data dari form
-        name = request.form['game-name']
-        price = request.form['price-game']
-        genre = request.form['genre']
-        desc = request.form['description']
-        status = int(request.form['status'])
-        image_file = request.files.get('image')
+        name = request.form['game_name']
+        price = request.form['game_price']
+        genre = request.form['game_genre']
+        desc = request.form['game_description']
+        status = int(request.form['game_status'])
+        image_file = request.files.get('game_image')
 
         if image_file and image_file.filename != '':
             image_data = image_file.read()
@@ -58,29 +66,32 @@ def edit_game(publisher_id, game_id):
                 (name, price, genre, desc, status),
                 with_image=False
             )
-        
+
         flash("Game updated successfully!")
         return redirect(url_for('publisher.published_games', publisher_id=publisher_id))
 
-    # GET method: ambil data game dari DB
     game = organize_game_repository.get_game_by_id(game_id, publisher_id)
 
     if game:
-        # Ubah data image ke base64 supaya bisa ditampilin di html
         game_data = game.to_dict()
-        game_data['image_data'] = base64.b64encode(game.image).decode('utf-8') if game.image else None
+        if game.image:
+            # Asumsi image JPEG, sesuaikan kalau PNG atau lainnya
+            game_data['image_data'] = "data:image/jpeg;base64," + base64.b64encode(game.image).decode('utf-8')
+        else:
+            game_data['image_data'] = None
 
         return render_template(
-            'published_edit_game.html',
+            'publisher_new_game.html',
+            publisher_id=publisher_id,
             is_edit=True,
             form_action=url_for('publisher.edit_game', publisher_id=publisher_id, game_id=game_id),
             game=game_data,
-            statuses=GameStatus,
-            publisher_id=publisher_id
+            statuses=GameStatus
         )
 
     flash("Game not found.")
-    return redirect(url_for('publisher.published_edit_games', publisher_id=publisher_id))
+    return redirect(url_for('publisher.published_games', publisher_id=publisher_id))
+
 
 def delete_game(publisher_id, game_id):
     organize_game_repository.delete_game(game_id, publisher_id)

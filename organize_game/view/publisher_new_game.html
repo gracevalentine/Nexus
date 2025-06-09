@@ -4,12 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Publisher – Add New Games</title>
+    <title>Publisher – {{ 'Edit Game' if is_edit else 'Add New Game' }}</title>
     <link rel="stylesheet" href="{{ url_for('publisher.static', filename='publisher_new_game.css') }}" />
 </head>
 
 <body>
-    <!-- <header> -->
     <div class="navbar">
       <a
         class="publisher-title"
@@ -17,66 +16,75 @@
         >Publisher Panel</a
       >
     </div>
-    <!-- </header> -->
 
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <a href="{{ url_for('publisher.published_games', publisher_id=publisher_id) }}">My Games</a>
-            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}"class="active">Add New Games</a>
+            <a href="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}" class="{{ '' if is_edit else 'active' }}">Add New Games</a>
         </div>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <form action="{{ url_for('publisher.add_new_game', publisher_id=publisher_id) }}" method="POST"
-                enctype="multipart/form-data" class="new-game-form">
+            <form action="{{ form_action }}" method="POST" enctype="multipart/form-data" class="new-game-form">
                 <!-- Image Upload Container -->
                 <div class="image-upload-container" onclick="triggerFileInput()">
                     <input type="file" id="game-image-input" name="game_image" accept="image/*"
                         onchange="previewImage(event)" hidden />
-                    <div id="image-placeholder">
+                    <div id="image-placeholder" {% if is_edit and game.image_data %}style="display:none"{% endif %}>
                         <span>Click to choose cover image</span>
                     </div>
-                    <img id="image-preview" src="" alt="Game Cover Preview" />
+                    <img id="image-preview" src="{{ game.image_data if is_edit else '' }}" alt="Game Cover Preview" {% if not is_edit or not game.image_data %}style="display:none"{% endif %} />
                 </div>
 
-                <!-- Game Details Fields -->
                 <div class="form-fields">
                     <div class="form-group">
                         <label for="game-name">GAME NAME</label>
-                        <input type="text" id="game-name" name="game_name" placeholder="Enter game name" required />
+                        <input type="text" id="game-name" name="game_name" placeholder="Enter game name"
+                            value="{{ game.game_name if is_edit else '' }}" required />
                     </div>
 
                     <div class="form-group">
                         <label for="game-price">PRICE GAME</label>
                         <input type="text" id="game-price" name="game_price" placeholder="Enter price (e.g. 160.000)"
-                            required />
+                            value="{{ game.game_price if is_edit else '' }}" required />
                     </div>
 
                     <div class="form-group">
                         <label for="game-genre">GENRE</label>
                         <select id="game-genre" name="game_genre" required>
-                            <option value="" disabled selected>Select genre</option>
-                            <option value="Action">Action</option>
-                            <option value="Adventure">Adventure</option>
-                            <option value="Casual">Casual</option>
-                            <option value="Racing">Racing</option>
-                            <option value="RPG">RPG</option>
-                            <option value="Shooter">Shooter</option>
-                            <option value="Simulation">Simulation</option>
-                            <option value="Strategy">Strategy</option>
-                            <!-- Tambahkan genre lain sesuai kebutuhan -->
+                            <option value="" disabled {{ '' if is_edit else 'selected' }}>Select genre</option>
+                            <option value="Action" {% if is_edit and game.game_genre == 'Action' %}selected{% endif %}>Action</option>
+                            <option value="Adventure" {% if is_edit and game.game_genre == 'Adventure' %}selected{% endif %}>Adventure</option>
+                            <option value="Casual" {% if is_edit and game.game_genre == 'Casual' %}selected{% endif %}>Casual</option>
+                            <option value="Racing" {% if is_edit and game.game_genre == 'Racing' %}selected{% endif %}>Racing</option>
+                            <option value="RPG" {% if is_edit and game.game_genre == 'RPG' %}selected{% endif %}>RPG</option>
+                            <option value="Shooter" {% if is_edit and game.game_genre == 'Shooter' %}selected{% endif %}>Shooter</option>
+                            <option value="Simulation" {% if is_edit and game.game_genre == 'Simulation' %}selected{% endif %}>Simulation</option>
+                            <option value="Strategy" {% if is_edit and game.game_genre == 'Strategy' %}selected{% endif %}>Strategy</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="game-description">DESCRIPTION</label>
                         <textarea id="game-description" name="game_description" placeholder="Enter game description"
-                            rows="4" required></textarea>
+                            rows="4" required>{{ game.game_description if is_edit else '' }}</textarea>
                     </div>
 
+                    <!-- Optional: Status select -->
+                    {% if is_edit %}
                     <div class="form-group">
-                        <button type="submit" class="add-button">Add</button>
+                        <label for="game-status">STATUS</label>
+                        <select id="game-status" name="game_status" required>
+                            {% for status in statuses %}
+                            <option value="{{ status.value }}" {% if game.status == status.value %}selected{% endif %}>
+                                {{ status.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <button type="submit" class="add-button">{{ 'Update' if is_edit else 'Add' }}</button>
                     </div>
                 </div>
             </form>
@@ -99,6 +107,14 @@
                     document.getElementById('image-placeholder').style.display = 'none';
                 }
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        window.onload = function() {
+            const imgPreview = document.getElementById('image-preview');
+            if (imgPreview.src && imgPreview.src !== window.location.href && imgPreview.src !== '') {
+                imgPreview.style.display = 'block';
+                document.getElementById('image-placeholder').style.display = 'none';
             }
         }
     </script>

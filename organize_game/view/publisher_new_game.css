@@ -132,6 +132,33 @@
   border-color: #1e90ff;
 }
 
+#game-genre {
+    background-color: black; /* Warna background dropdown saat belum dibuka */
+    color: white; /* Warna tulisan yang terlihat di dropdown */
+    border: 1px solid white; /* Optional biar border jelas */
+    border-radius: 8px;
+    padding: 8px;
+}
+
+/* Style untuk opsi saat dropdown dibuka */
+#game-genre option {
+    background-color: black;
+    color: white;
+}
+
+/* Warna opsi saat hover */
+#game-genre option:hover {
+    background-color: #444;
+    color: white;
+}
+
+/* Warna opsi yang sedang dipilih */
+#game-genre option:checked {
+    background-color: #666;
+    color: white;
+}
+
+
 /* Dropdown arrow */
 .form-group select {
   appearance: none; 
